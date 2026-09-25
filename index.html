@@ -497,14 +497,33 @@ function chercherVoix() {
 }
 if ("speechSynthesis" in window) { chercherVoix(); speechSynthesis.onvoiceschanged = chercherVoix; }
 
+// Safari sur iPad n'accepte de parler qu'après un premier toucher de l'écran :
+// on "réveille" la voix au premier contact, en silence.
+let voixReveillee = false;
+function reveillerVoix() {
+  if (voixReveillee || !("speechSynthesis" in window)) return;
+  voixReveillee = true;
+  try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } catch (e) {}
+}
+document.addEventListener("touchend", reveillerVoix, true);
+document.addEventListener("click", reveillerVoix, true);
+
+let parole = null; // garde une référence, sinon Safari coupe parfois la phrase
 function dire(texte, lent) {
-  if (!("speechSynthesis" in window)) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(texte);
-  u.lang = "fr-FR";
-  if (voixFr) u.voice = voixFr;
-  u.rate = lent ? 0.55 : 0.85;
-  speechSynthesis.speak(u);
+  if (!("speechSynthesis" in window)) { message("La voix n'est pas disponible sur cet appareil.", "ko"); return; }
+  if (!voixFr) chercherVoix();
+  const parler = () => {
+    parole = new SpeechSynthesisUtterance(texte);
+    parole.lang = "fr-FR";
+    if (voixFr) parole.voice = voixFr;
+    parole.rate = lent ? 0.55 : 0.85;
+    parole.onerror = ev => { if (ev.error !== "interrupted" && ev.error !== "canceled") message("La voix ne répond pas (" + ev.error + ").", "ko"); };
+    speechSynthesis.speak(parole);
+    if (speechSynthesis.paused) speechSynthesis.resume();
+  };
+  // Sur iPad, parler juste après avoir coupé la voix fait souvent perdre la phrase
+  if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); setTimeout(parler, 150); }
+  else parler();
 }
 function texteDictee(e) {
   const a = affiche(e);
@@ -686,7 +705,7 @@ let minuteries = [];
 function nettoyer() {
   minuteries.forEach(clearTimeout); minuteries = [];
   document.onkeydown = null;
-  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  if ("speechSynthesis" in window && (speechSynthesis.speaking || speechSynthesis.pending)) speechSynthesis.cancel();
 }
 function plusTard(f, ms) { minuteries.push(setTimeout(f, ms)); }
 function afficher(html) { nettoyer(); app.innerHTML = html; window.scrollTo(0, 0); }
@@ -1222,10 +1241,25 @@ function ecranParent() {
       <div class="qui"><strong>Espace parent</strong><span>Listes de mots et progrès</span></div>
     </div>
     <div class="parent" style="display:flex;flex-direction:column;gap:18px">
+      <section class="panneau">
+        <h2>La voix</h2>
+        <p class="aide" id="etat-voix"></p>
+        <div><button class="bouton" id="tester-voix">${ICONES.son} Tester la voix</button></div>
+      </section>
       ${PROFILS.map(p => panneauParent(p)).join("")}
     </div>
   `);
   document.getElementById("retour").onclick = ecranAccueil;
+  const etatVoix = () => {
+    chercherVoix();
+    const n = "speechSynthesis" in window ? speechSynthesis.getVoices().filter(v => /^fr/i.test(v.lang)).length : 0;
+    document.getElementById("etat-voix").textContent = !("speechSynthesis" in window)
+      ? "Ce navigateur ne sait pas lire à voix haute."
+      : voixFr ? `Voix utilisée : ${voixFr.name} (${voixFr.lang}). ${n} voix française${n > 1 ? "s" : ""} sur cet appareil.`
+      : "Aucune voix française trouvée pour l'instant. Touche « Tester la voix ».";
+  };
+  etatVoix();
+  document.getElementById("tester-voix").onclick = () => { dire("Bonjour ! Nous visitons la cathédrale de Reims."); setTimeout(etatVoix, 500); };
   PROFILS.forEach(p => {
     const q = s => app.querySelector(`[data-panneau="${p}"] ${s}`);
     q(".enregistrer").onclick = () => {
