@@ -28,6 +28,8 @@
     --vert-pale: #DDF3E6;
     --rouge: #CF3F35;
     --rouge-pale: #FBE1DE;
+    --surligneur-vert: #8EE0A8;
+    --surligneur-rouge: #F7ADA5;
     --blanc: #FFFFFF;
     --c-grande: #FF9B3D;
     --c-petite: #3FB2BF;
@@ -180,8 +182,9 @@
     border: 2px solid var(--encre);
     background: var(--blanc);
   }
-  .point.ok { background: var(--fluo); }
-  .point.ko { background: var(--carreau-fort); }
+  .point.ok { background: var(--vert); border-color: var(--vert); }
+  .point.ko { background: var(--rouge); border-color: var(--rouge); }
+  .point.bis { border-style: dashed; }
   .point.actuel { transform: scale(1.3); box-shadow: 0 0 0 3px var(--fluo-pale); }
   .etoiles { font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 4px; min-width: 64px; justify-content: flex-end; }
   .etoiles svg { width: 26px; height: 26px; }
@@ -336,13 +339,23 @@
     position: absolute;
     left: -6px; right: -6px; bottom: 6%;
     height: 45%;
-    background: var(--fluo);
+    background: var(--surligneur-vert);
     z-index: -1;
     border-radius: 3px;
     transform-origin: left;
     animation: surligner .45s ease-out both;
   }
   @keyframes surligner { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .surligne.rouge::after { background: var(--surligneur-rouge); }
+
+  /* correction après une erreur */
+  .correction { display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: 680px; }
+  .ligne-corr { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .etiquette { font-size: 17px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--encre-douce); }
+  .mot-corr { font-size: clamp(34px, 7vw, 56px); font-weight: 700; line-height: 1.25; }
+  .ligne-corr.faux .mot-corr { font-size: clamp(26px, 5vw, 40px); }
+  .diff-ko { color: var(--rouge); text-decoration: underline 3px; text-underline-offset: 4px; }
+  .diff-ok { color: #16693A; text-decoration: underline 3px; text-underline-offset: 4px; }
   .secoue { animation: secouer .4s; }
   @keyframes secouer { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
 
@@ -800,28 +813,30 @@ function ecranMenu(p) {
    Déroulement d'une partie
    ========================================================= */
 function lancerPartie(p, jeu) {
-  S = { p, jeu, niveau: liste(p).niveau, serie: tirerSerie(p), i: 0, points: 0, resultats: [] };
+  const serie = tirerSerie(p);
+  // total = nombre de mots comptés ; les mots ratés sont rejoués à la fin ("deuxième chance")
+  S = { p, jeu, niveau: liste(p).niveau, serie, total: serie.length, etats: [], i: 0, points: 0, resultats: [] };
   if (!S.serie.length) { ecranMenu(p); return; }
   motSuivant();
 }
 
 function motSuivant() {
   const e = S.serie[S.i];
-  S.essais = 0;
   S.fini = false;
   const type = S.jeu === "melange" ? choisir(["choix", "trous", "morceaux", "dictee", "flash"]) : S.jeu;
   const jeu = JEUX.find(j => j.id === type);
+  const bis = S.i >= S.total;
   afficher(`
     <div class="barre">
       <button class="bouton" id="stop">✕ Arrêter</button>
       <div class="progression">${S.serie.map((_, k) => {
-        const r = S.resultats[k];
-        return `<span class="point${r ? (r.ok ? " ok" : " ko") : ""}${k === S.i ? " actuel" : ""}"></span>`;
+        const r = S.etats[k];
+        return `<span class="point${r === true ? " ok" : r === false ? " ko" : ""}${k >= S.total ? " bis" : ""}${k === S.i ? " actuel" : ""}"></span>`;
       }).join("")}</div>
       <div class="etoiles">${ICONES.etoile}<span>${S.points}</span></div>
     </div>
     <main class="scene">
-      <p class="nom-jeu">${jeu.nom}</p>
+      <p class="nom-jeu">${jeu.nom}${bis ? " · deuxième chance" : ""}</p>
       <p class="consigne" id="consigne"></p>
       <div class="zone" id="zone"></div>
       <div class="message" id="message" aria-live="polite"></div>
@@ -843,20 +858,64 @@ const BRAVOS = ["Bravo !", "Super !", "Parfait !", "Génial !", "Excellent !", "
 function gagne(e, cibleSurligne) {
   if (S.fini) return;
   S.fini = true;
-  const premier = S.essais === 0;
-  if (premier) S.points++;
-  S.resultats.push({ e, ok: premier });
-  noterResultat(S.p, e, premier);
+  const bis = S.i >= S.total;
+  if (!bis) { S.points++; S.resultats.push({ e, ok: true }); }
+  S.etats[S.i] = true;
+  noterResultat(S.p, e, true);
   son("ok");
-  message(premier ? choisir(BRAVOS) : "C'est ça !", "ok");
+  message(bis ? "Cette fois, c'est juste !" : choisir(BRAVOS), "ok");
   if (cibleSurligne) cibleSurligne.classList.add("surligne");
   plusTard(passer, 1300);
 }
-function rate(texte) {
-  S.essais++;
-  son("ko");
-  message(texte || "Pas tout à fait… essaie encore !", "ko");
+
+// Lettres communes aux deux mots (plus longue sous-suite commune)
+function lettresCommunes(a, b) {
+  const A = [...a], B = [...b], n = A.length, m = B.length;
+  const t = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+    t[i][j] = A[i] === B[j] ? t[i + 1][j + 1] + 1 : Math.max(t[i + 1][j], t[i][j + 1]);
+  const okA = new Array(n).fill(false), okB = new Array(m).fill(false);
+  for (let i = 0, j = 0; i < n && j < m;) {
+    if (A[i] === B[j]) { okA[i] = okB[j] = true; i++; j++; }
+    else if (t[i + 1][j] >= t[i][j + 1]) i++; else j++;
+  }
+  return { A, B, okA, okB };
 }
+
+// Erreur : on montre la correction, puis on passe au mot suivant
+function echec(e, tentative, verbe) {
+  if (S.fini) return;
+  S.fini = true;
+  const bis = S.i >= S.total;
+  // au plus 5 deuxièmes chances par série, pour ne pas la rallonger à l'infini
+  const rejoue = !bis && S.serie.length - S.total < 5;
+  if (!bis) { S.resultats.push({ e, ok: false }); if (rejoue) S.serie.push(e); }
+  S.etats[S.i] = false;
+  noterResultat(S.p, e, false);
+  son("ko");
+  const { A, B, okA, okB } = lettresCommunes(tentative, e.mot);
+  const marquer = (L, ok, cls) => L.map((c, k) => ok[k] ? esc(c) : `<span class="${cls}">${esc(c)}</span>`).join("");
+  const det = e.det ? (e.det.endsWith("'") ? e.det : e.det + " ") : "";
+  consigne("Regarde bien la correction");
+  const zone = document.getElementById("zone");
+  zone.innerHTML = `
+    <div class="correction">
+      <div class="ligne-corr faux">
+        <span class="etiquette">${verbe}</span>
+        <span class="mot-corr surligne rouge">${esc(det)}${marquer(A, okA, "diff-ko")}</span>
+      </div>
+      <div class="reglure ligne-corr juste">
+        <span class="etiquette">Il fallait écrire</span>
+        <span class="mot-corr surligne">${esc(det)}${marquer(B, okB, "diff-ok")}</span>
+      </div>
+    </div>
+    <button class="bouton plein" id="compris">J'ai compris →</button>
+  `;
+  message(rejoue ? "Pas grave ! Ce mot reviendra à la fin de la série." : "Pas grave ! Ce mot reviendra dans une prochaine partie.", "ko");
+  document.getElementById("compris").onclick = passer;
+  plusTard(() => dire(affiche(e)), 300);
+}
+
 function passer() {
   S.i++;
   if (S.i >= S.serie.length) ecranFin(); else motSuivant();
@@ -865,7 +924,7 @@ function passer() {
 /* ---------- Fin de série ---------- */
 function ecranFin() {
   const { p, jeu, points } = S;
-  const sur = S.serie.length;
+  const sur = S.total;
   const cle = `record:${p}:${jeu}`;
   const rec = Stock.lire(cle, null);
   const nouveau = !rec || points / sur > rec.points / rec.sur;
@@ -913,8 +972,10 @@ MOTEURS.choix = (e, zone) => {
       zone.querySelectorAll(".choix button:not(.juste)").forEach(x => x.disabled = true);
       gagne(e);
     } else {
-      b.classList.add("faux"); b.disabled = true;
-      rate("Non, regarde bien les autres.");
+      b.classList.add("faux");
+      zone.querySelectorAll(".choix button").forEach(x => { x.disabled = true; if (x.dataset.o === e.mot) x.classList.add("juste"); });
+      S.fini = true; son("ko");
+      plusTard(() => { S.fini = false; echec(e, b.dataset.o, "Tu as choisi"); }, 1100);
     }
   });
 };
@@ -990,22 +1051,9 @@ MOTEURS.trous = (e, zone) => {
     }
     fautes.forEach(i => zone.querySelector(`.case[data-pos="${i}"]`).classList.add("faux"));
     secouer(mot);
-    rate();
-    if (S.essais >= 3) {
-      plusTard(() => {
-        trous.forEach(i => { const b = zone.querySelector(`.case[data-pos="${i}"]`); b.classList.remove("faux"); b.classList.add("juste"); b.textContent = w[i]; });
-        message("Voici la bonne réponse. Regarde bien !", "ko");
-        S.fini = true;
-        zone.querySelector(".banque").innerHTML = `<button class="bouton plein" id="suite">Mot suivant →</button>`;
-        zone.querySelector("#suite").onclick = () => { S.resultats.push({ e, ok: false }); noterResultat(S.p, e, false); passer(); };
-      }, 900);
-      return;
-    }
-    plusTard(() => {
-      fautes.forEach(i => { delete remplis[i]; zone.querySelector(`.case[data-pos="${i}"]`).classList.remove("faux"); });
-      selection = fautes[0];
-      dessiner();
-    }, 900);
+    const tentative = [...w].map((c, i) => trous.includes(i) ? banque[remplis[i]] : c).join("");
+    S.fini = true;
+    plusTard(() => { S.fini = false; echec(e, tentative, "Tu as écrit"); }, 900);
   }
   zone.querySelectorAll(".case").forEach(b => b.onclick = () => {
     if (S.fini) return;
@@ -1069,24 +1117,8 @@ MOTEURS.morceaux = (e, zone) => {
       return;
     }
     secouer(rep);
-    rate();
-    if (S.essais >= 3) {
-      S.fini = true;
-      plusTard(() => {
-        rep.innerHTML = `<span class="mot-grand">${esc(affiche(e))}</span>`;
-        message("Voici le bon mot. Regarde bien !", "ko");
-        banque.innerHTML = `<button class="bouton plein" id="suite">Mot suivant →</button>`;
-        banque.querySelector("#suite").onclick = () => { S.resultats.push({ e, ok: false }); noterResultat(S.p, e, false); passer(); };
-      }, 700);
-      return;
-    }
-    // on garde le début juste, on rend le reste
-    plusTard(() => {
-      let bon = 0, acc = "";
-      for (const k of place) { if (cible.startsWith(acc + morceaux[k])) { acc += morceaux[k]; bon++; } else break; }
-      place.splice(bon);
-      dessiner();
-    }, 700);
+    S.fini = true;
+    plusTard(() => { S.fini = false; echec(e, essai, "Tu as écrit"); }, 900);
   }
   dessiner();
 };
@@ -1150,33 +1182,22 @@ function comparer(saisi, e) {
 /* ---------- 4. La dictée ---------- */
 MOTEURS.dictee = (e, zone) => {
   consigne("Écoute bien, puis écris le mot");
-  let modeCopie = false;
   zone.innerHTML = `
     <div class="ligne-boutons">
       <button class="bouton plein haut-parleur" id="ecouter">${ICONES.son} Écouter</button>
       <button class="bouton" id="lent">Plus lentement</button>
     </div>
-    <div class="modele" id="modele" hidden></div>
   `;
   zone.querySelector("#ecouter").onclick = () => dire(texteDictee(e));
   zone.querySelector("#lent").onclick = () => dire(affiche(e), true);
-  const modele = zone.querySelector("#modele");
   const c = clavier(zone, {
     prefixe: e.det ? (e.det.endsWith("'") ? e.det : e.det + " ") : "",
     onValider(v) {
       if (S.fini) return;
       const r = comparer(v, e);
-      if (r === "ok") { modele.hidden = true; gagne(e, c.ligne.querySelector(".saisie")); return; }
+      if (r === "ok") { gagne(e, c.ligne.querySelector(".saisie")); return; }
       if (r === "maj") { message("Presque ! Attention à la majuscule.", "ko"); return; }
-      secouer(c.ligne);
-      if (modeCopie) { message("Recopie bien le mot écrit en vert.", "ko"); c.vider(); return; }
-      rate();
-      c.vider();
-      if (S.essais >= 2) {
-        modeCopie = true;
-        modele.hidden = false;
-        modele.innerHTML = `Le mot s'écrit : <strong>${esc(affiche(e))}</strong><br>Recopie-le pour continuer.`;
-      }
+      echec(e, v, "Tu as écrit");
     }
   });
   plusTard(() => dire(texteDictee(e)), 400);
@@ -1198,26 +1219,15 @@ MOTEURS.flash = (e, zone) => {
   }
   function ecrire() {
     consigne("À toi ! Écris le mot de mémoire");
-    zone.innerHTML = `<div class="modele" id="modele" hidden></div>`;
-    const modele = zone.querySelector("#modele");
-    let copie = false;
+    zone.innerHTML = "";
     const c = clavier(zone, {
       prefixe: e.det ? (e.det.endsWith("'") ? e.det : e.det + " ") : "",
       onValider(v) {
         if (S.fini) return;
         const r = comparer(v, e);
-        if (r === "ok") { modele.hidden = true; gagne(e, c.ligne.querySelector(".saisie")); return; }
+        if (r === "ok") { gagne(e, c.ligne.querySelector(".saisie")); return; }
         if (r === "maj") { message("Presque ! Attention à la majuscule.", "ko"); return; }
-        secouer(c.ligne);
-        if (copie) { message("Recopie bien le mot écrit en vert.", "ko"); c.vider(); return; }
-        rate("Pas tout à fait… regarde encore !");
-        if (S.essais >= 3) {
-          copie = true; c.vider();
-          modele.hidden = false;
-          modele.innerHTML = `Le mot s'écrit : <strong>${esc(affiche(e))}</strong><br>Recopie-le pour continuer.`;
-          return;
-        }
-        plusTard(montrer, 1000);
+        echec(e, v, "Tu as écrit");
       }
     });
   }
