@@ -75,10 +75,13 @@ const LISTES = {
     prenom: "",
     classe: "CE1",
     niveau: 1,
-    titre: "Liste d'exemple (à remplacer)",
+    titre: "Mots de la semaine",
     mots: [
-      "l'école", "un cahier", "la maison", "le chat", "un ami",
-      "la classe", "jouer", "petit", "avec", "dans"
+      { mot: "visiter", pieges: ["viziter", "visitter", "visité"], phrase: "Nous allons {} le zoo." },
+      { mot: "un grand-père", pieges: ["grand père", "gran-père", "grand-pére"], phrase: "Mon {} me lit une histoire." },
+      { mot: "le métro", pieges: ["metro", "métreau", "métrot"], phrase: "Je prends le {} avec maman." },
+      { mot: "le car", pieges: ["kar", "quar", "carre"], phrase: "Le {} nous emmène à la piscine." },
+      { mot: "une rue", pieges: ["ru", "rut", "rus"], phrase: "J'habite dans cette {}." }
     ]
   }
 };

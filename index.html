@@ -475,6 +475,14 @@ function tirerSerie(p, n = 10) {
     return { e, poids };
   });
   const serie = [];
+  // liste courte : chaque mot revient deux fois dans la série
+  if (pool.length < n) {
+    const k = Math.min(n, pool.length * 2);
+    const tour1 = melanger(pool.map(x => x.e));
+    let tour2 = melanger(tour1);
+    for (let g = 0; g < 20 && tour2[0] === tour1[tour1.length - 1]; g++) tour2 = melanger(tour1);
+    return tour1.concat(tour2).slice(0, k);
+  }
   const k = Math.min(n, pool.length);
   while (serie.length < k) {
     const total = pool.reduce((a, b) => a + b.poids, 0);
@@ -1090,7 +1098,7 @@ function clavier(zone, { prefixe, onValider }) {
     ["é", "è", "ê", "à", "â", "ç", "ù", "û", "î", "ï", "ô", "ë"],
     ["a", "z", "e", "r", "t", "y", "u", "i", "o", "p"],
     ["q", "s", "d", "f", "g", "h", "j", "k", "l", "m"],
-    ["⇧", "w", "x", "c", "v", "b", "n", "'", "⌫"],
+    ["⇧", "w", "x", "c", "v", "b", "n", "'", "-", "⌫"],
     ["espace", "Valider"]
   ];
   const ligne = document.createElement("div");
