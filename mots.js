@@ -81,7 +81,12 @@ const LISTES = {
       { mot: "un grand-père", pieges: ["grand père", "gran-père", "grand-pére"], phrase: "Mon {} me lit une histoire." },
       { mot: "le métro", pieges: ["metro", "métreau", "métrot"], phrase: "Je prends le {} avec maman." },
       { mot: "le car", pieges: ["kar", "quar", "carre"], phrase: "Le {} nous emmène à la piscine." },
-      { mot: "une rue", pieges: ["ru", "rut", "rus"], phrase: "J'habite dans cette {}." }
+      { mot: "une rue", pieges: ["ru", "rut", "rus"], phrase: "J'habite dans cette {}." },
+      { mot: "la carte", pieges: ["carthe", "cartte", "quarte"], phrase: "Papa regarde la {} pour trouver la route." },
+      { mot: "Paris", pieges: ["paris", "Pari", "Parie"], phrase: "La tour Eiffel est à {}." },
+      { mot: "la France", pieges: ["france", "Frence", "Franse"], phrase: "Paris est en {}." },
+      { mot: "habiter", pieges: ["abiter", "habitter", "habité"], phrase: "J'aimerais {} près de la mer." },
+      { mot: "l'Europe", pieges: ["europe", "Eurôpe", "Erope"], phrase: "La France est en {}." }
     ]
   }
 };
