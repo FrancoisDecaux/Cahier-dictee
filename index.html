@@ -1127,7 +1127,7 @@ MOTEURS.morceaux = (e, zone) => {
 function clavier(zone, { prefixe, onValider }) {
   let valeur = "", maj = false;
   const RANGS = [
-    ["é", "è", "ê", "à", "â", "ç", "ù", "û", "î", "ï", "ô", "ë"],
+    ["é", "è", "ê", "à", "â", "ç", "ù", "û", "î", "ï", "ô", "ë", "œ"],
     ["a", "z", "e", "r", "t", "y", "u", "i", "o", "p"],
     ["q", "s", "d", "f", "g", "h", "j", "k", "l", "m"],
     ["⇧", "w", "x", "c", "v", "b", "n", "'", "-", "⌫"],
@@ -1169,7 +1169,8 @@ function clavier(zone, { prefixe, onValider }) {
   };
 }
 
-const normal = s => s.replace(/[’`]/g, "'").replace(/\s+/g, " ").trim();
+// « oe » tapé à la place de « œ » est accepté
+const normal = s => s.replace(/[’`]/g, "'").replace(/oe/g, "œ").replace(/OE|Oe/g, "Œ").replace(/\s+/g, " ").trim();
 function comparer(saisi, e) {
   const a = normal(saisi), b = normal(e.mot);
   if (a === b) return "ok";

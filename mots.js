@@ -75,18 +75,18 @@ const LISTES = {
     prenom: "",
     classe: "CE1",
     niveau: 1,
-    titre: "Mots de la semaine",
+    titre: "La lettre r",
     mots: [
       { mot: "visiter", pieges: ["viziter", "visitter", "visité"], phrase: "Nous allons {} le zoo." },
       { mot: "un grand-père", pieges: ["grand père", "gran-père", "grand-pére"], phrase: "Mon {} me lit une histoire." },
       { mot: "le métro", pieges: ["metro", "métreau", "métrot"], phrase: "Je prends le {} avec maman." },
       { mot: "le car", pieges: ["kar", "quar", "carre"], phrase: "Le {} nous emmène à la piscine." },
       { mot: "une rue", pieges: ["ru", "rut", "rus"], phrase: "J'habite dans cette {}." },
-      { mot: "la carte", pieges: ["carthe", "cartte", "quarte"], phrase: "Papa regarde la {} pour trouver la route." },
-      { mot: "Paris", pieges: ["paris", "Pari", "Parie"], phrase: "La tour Eiffel est à {}." },
-      { mot: "la France", pieges: ["france", "Frence", "Franse"], phrase: "Paris est en {}." },
-      { mot: "habiter", pieges: ["abiter", "habitter", "habité"], phrase: "J'aimerais {} près de la mer." },
-      { mot: "l'Europe", pieges: ["europe", "Eurôpe", "Erope"], phrase: "La France est en {}." }
+      { mot: "la tour", pieges: ["toure", "tourr", "tourt"], phrase: "La {} Eiffel est très haute." },
+      { mot: "admirer", pieges: ["amirer", "admmirer", "admiré"], phrase: "J'aime {} les étoiles." },
+      { mot: "le musée", pieges: ["musé", "muzée", "mussée"], phrase: "Nous visitons le {} avec la classe." },
+      { mot: "une œuvre", pieges: ["euvre", "œvre", "heuvre"], phrase: "Au musée, j'admire une {} d'art." },
+      { mot: "monsieur", pieges: ["mosieur", "monsieu", "monssieur"], phrase: "Le {} porte un chapeau." }
     ]
   }
 };
