@@ -75,18 +75,18 @@ const LISTES = {
     prenom: "",
     classe: "CE1",
     niveau: 1,
-    titre: "La lettre r",
+    titre: "La lettre t",
     mots: [
-      { mot: "visiter", pieges: ["viziter", "visitter", "visité"], phrase: "Nous allons {} le zoo." },
-      { mot: "un grand-père", pieges: ["grand père", "gran-père", "grand-pére"], phrase: "Mon {} me lit une histoire." },
-      { mot: "le métro", pieges: ["metro", "métreau", "métrot"], phrase: "Je prends le {} avec maman." },
-      { mot: "le car", pieges: ["kar", "quar", "carre"], phrase: "Le {} nous emmène à la piscine." },
-      { mot: "une rue", pieges: ["ru", "rut", "rus"], phrase: "J'habite dans cette {}." },
-      { mot: "la tour", pieges: ["toure", "tourr", "tourt"], phrase: "La {} Eiffel est très haute." },
-      { mot: "admirer", pieges: ["amirer", "admmirer", "admiré"], phrase: "J'aime {} les étoiles." },
-      { mot: "le musée", pieges: ["musé", "muzée", "mussée"], phrase: "Nous visitons le {} avec la classe." },
-      { mot: "une œuvre", pieges: ["euvre", "œvre", "heuvre"], phrase: "Au musée, j'admire une {} d'art." },
-      { mot: "monsieur", pieges: ["mosieur", "monsieu", "monssieur"], phrase: "Le {} porte un chapeau." }
+      { mot: "une carte", pieges: ["carthe", "cartte", "quarte"], phrase: "J'envoie une {} à Mamie." },
+      { mot: "montrer", pieges: ["montré", "monttrer", "mantrer"], phrase: "Je vais te {} mon dessin." },
+      { mot: "un enfant", pieges: ["enfent", "anfant", "enfan"], phrase: "Un {} joue dans le parc." },
+      { mot: "postal", pieges: ["postale", "posttal", "postalle"], phrase: "Le facteur apporte un colis {}." },
+      { mot: "l'Italie", pieges: ["italie", "Itali", "Itallie"], phrase: "Nous partons en vacances en {}." },
+      { mot: "une tradition", pieges: ["tradission", "tradision", "traddition"], phrase: "Manger des crêpes est une {}." },
+      { mot: "la culture", pieges: ["culturre", "kulture", "cultur"], phrase: "La musique fait partie de la {}." },
+      { mot: "devant", pieges: ["devent", "devan", "devand"], phrase: "Je m'assois {} la maison." },
+      { mot: "différent", pieges: ["diférent", "différant", "diférant"], phrase: "Mon dessin est {} du tien." },
+      { mot: "l'histoire", pieges: ["istoire", "histoir", "hystoire"], phrase: "J'aime l'{} des châteaux forts." }
     ]
   }
 };
