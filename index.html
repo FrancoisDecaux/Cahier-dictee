@@ -1340,7 +1340,7 @@ ecranAccueil();
 
 // Mode hors ligne : garde une copie du jeu et de la liste sur l'appareil
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then(r => r.update()).catch(() => {});
 }
 </script>
 </body>

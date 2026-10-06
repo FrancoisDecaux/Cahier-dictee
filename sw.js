@@ -1,6 +1,6 @@
 // Mode hors ligne : on essaie toujours internet d'abord (pour avoir la dernière liste),
 // et si le réseau ne répond pas, on utilise la dernière copie gardée sur l'iPad.
-const CACHE = "cahier-dictee-v1";
+const CACHE = "cahier-dictee-v2";
 const FICHIERS = ["./", "index.html", "mots.js", "icone.png"];
 
 self.addEventListener("install", e => {
@@ -24,8 +24,10 @@ self.addEventListener("fetch", e => {
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     try {
+      // no-store : on ne se contente pas de la copie de Safari, on va vraiment sur internet
+      const frais = url.origin === location.origin ? fetch(url.href, { cache: "no-store" }) : fetch(req);
       const rep = await Promise.race([
-        fetch(req),
+        frais,
         new Promise((_, rejet) => setTimeout(() => rejet(new Error("réseau trop lent")), 5000))
       ]);
       if (rep && (rep.ok || rep.type === "opaque")) cache.put(cle, rep.clone());
