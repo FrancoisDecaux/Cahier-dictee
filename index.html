@@ -1130,9 +1130,10 @@ function clavier(zone, { prefixe, onValider }) {
   let valeur = "", maj = false;
   const RANGS = [
     ["é", "è", "ê", "à", "â", "ç", "ù", "û", "î", "ï", "ô", "ë", "œ"],
-    ["a", "z", "e", "r", "t", "y", "u", "i", "o", "p"],
-    ["q", "s", "d", "f", "g", "h", "j", "k", "l", "m"],
-    ["⇧", "w", "x", "c", "v", "b", "n", "'", "-", "⌫"],
+    // lettres dans l'ordre alphabétique, plus facile à trouver pour les enfants
+    ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
+    ["k", "l", "m", "n", "o", "p", "q", "r", "s", "t"],
+    ["⇧", "u", "v", "w", "x", "y", "z", "'", "-", "⌫"],
     ["espace", "Valider"]
   ];
   const ligne = document.createElement("div");
