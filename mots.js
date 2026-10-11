@@ -81,7 +81,7 @@ const LISTES = {
     prenom: "",
     classe: "CE1",
     niveau: 1,
-    titre: "La lettre t et les nombres",
+    titre: "La lettre t, les nombres et révisions",
     mots: [
       { mot: "une carte", pieges: ["carthe", "cartte", "quarte"], phrase: "J'envoie une {} à Mamie." },
       { mot: "montrer", pieges: ["montré", "monttrer", "mantrer"], phrase: "Je vais te {} mon dessin." },
@@ -113,7 +113,17 @@ const LISTES = {
       { mot: "vingt", pieges: ["vint", "vin", "vain"], phrase: "Dix plus dix font {}." },
       { mot: "trente", pieges: ["trante", "trent", "tremte"], phrase: "Le mois de juin a {} jours." },
       { mot: "quarante", pieges: ["carante", "quarente", "quaranthe"], phrase: "Vingt plus vingt font {}." },
-      { mot: "cinquante", pieges: ["cinquente", "sinquante", "cinkante"], phrase: "Maman a un billet de {} euros." }
+      { mot: "cinquante", pieges: ["cinquente", "sinquante", "cinkante"], phrase: "Maman a un billet de {} euros." },
+      // révisions des semaines précédentes
+      { mot: "visiter", pieges: ["viziter", "visitter", "visité"], phrase: "Nous allons {} le zoo." },
+      { mot: "un grand-père", pieges: ["grand père", "gran-père", "grand-pére"], phrase: "Mon {} me lit une histoire." },
+      { mot: "le métro", pieges: ["metro", "métreau", "métrot"], phrase: "Je prends le {} avec maman." },
+      { mot: "le car", pieges: ["kar", "quar", "carre"], phrase: "Le {} nous emmène à la piscine." },
+      { mot: "une rue", pieges: ["ru", "rut", "rus"], phrase: "J'habite dans cette {}." },
+      { mot: "Paris", pieges: ["paris", "Pari", "Parie"], phrase: "La tour Eiffel est à {}." },
+      { mot: "la France", pieges: ["france", "Frence", "Franse"], phrase: "Paris est en {}." },
+      { mot: "habiter", pieges: ["abiter", "habitter", "habité"], phrase: "J'aimerais {} près de la mer." },
+      { mot: "l'Europe", pieges: ["europe", "Eurôpe", "Erope"], phrase: "La France est en {}." }
     ]
   }
 };
