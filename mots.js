@@ -81,7 +81,7 @@ const LISTES = {
     prenom: "",
     classe: "CE1",
     niveau: 1,
-    titre: "La lettre t",
+    titre: "La lettre t et les nombres",
     mots: [
       { mot: "une carte", pieges: ["carthe", "cartte", "quarte"], phrase: "J'envoie une {} à Mamie." },
       { mot: "montrer", pieges: ["montré", "monttrer", "mantrer"], phrase: "Je vais te {} mon dessin." },
@@ -92,7 +92,28 @@ const LISTES = {
       { mot: "la culture", pieges: ["culturre", "kulture", "cultur"], phrase: "La musique fait partie de la {}." },
       { mot: "devant", pieges: ["devent", "devan", "devand"], phrase: "Je m'assois {} la maison." },
       { mot: "différent", pieges: ["diférent", "différant", "diférant"], phrase: "Mon dessin est {} du tien." },
-      { mot: "l'histoire", pieges: ["istoire", "histoir", "hystoire"], phrase: "J'aime l'{} des châteaux forts." }
+      { mot: "l'histoire", pieges: ["istoire", "histoir", "hystoire"], phrase: "J'aime l'{} des châteaux forts." },
+      // les nombres jusqu'à cinquante
+      { mot: "un", pieges: ["um", "ain", "hun"], phrase: "J'ai {} nez." },
+      { mot: "deux", pieges: ["deu", "deus", "deut"], phrase: "J'ai {} yeux." },
+      { mot: "trois", pieges: ["troi", "troa", "troit"], phrase: "Le triangle a {} côtés." },
+      { mot: "quatre", pieges: ["catre", "quatr", "katre"], phrase: "Le chat a {} pattes." },
+      { mot: "cinq", pieges: ["cinc", "sinq", "cink"], phrase: "J'ai {} doigts à une main." },
+      { mot: "six", pieges: ["sis", "sixe", "cix"], phrase: "Un dé a {} faces." },
+      { mot: "sept", pieges: ["set", "sète", "cept"], phrase: "Il y a {} jours dans une semaine." },
+      { mot: "huit", pieges: ["uit", "huitt", "huite"], phrase: "L'araignée a {} pattes." },
+      { mot: "neuf", pieges: ["neufe", "noeuf", "neuff"], phrase: "Après huit vient {}." },
+      { mot: "dix", pieges: ["dis", "dixe", "diz"], phrase: "J'ai {} doigts en tout." },
+      { mot: "onze", pieges: ["onse", "honze", "onz"], phrase: "Une équipe de foot a {} joueurs." },
+      { mot: "douze", pieges: ["douse", "douz", "doze"], phrase: "Il y a {} mois dans une année." },
+      { mot: "treize", pieges: ["trèze", "treise", "traize"], phrase: "Après douze vient {}." },
+      { mot: "quatorze", pieges: ["catorze", "quatorse", "quatorz"], phrase: "Deux semaines, c'est {} jours." },
+      { mot: "quinze", pieges: ["kinze", "quinse", "quainze"], phrase: "Dix plus cinq font {}." },
+      { mot: "seize", pieges: ["sèze", "seise", "ceize"], phrase: "Après quinze vient {}." },
+      { mot: "vingt", pieges: ["vint", "vin", "vain"], phrase: "Dix plus dix font {}." },
+      { mot: "trente", pieges: ["trante", "trent", "tremte"], phrase: "Le mois de juin a {} jours." },
+      { mot: "quarante", pieges: ["carante", "quarente", "quaranthe"], phrase: "Vingt plus vingt font {}." },
+      { mot: "cinquante", pieges: ["cinquente", "sinquante", "cinkante"], phrase: "Maman a un billet de {} euros." }
     ]
   }
 };
