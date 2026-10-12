@@ -134,6 +134,16 @@
   .profil .prenom { font-size: 34px; font-weight: 700; line-height: 1.15; }
   .profil .liste { color: var(--encre-douce); font-size: 17px; }
   .pied { display: flex; justify-content: center; margin-top: auto; }
+  .lien-tables {
+    display: flex; align-items: center; gap: 16px;
+    border: 2px solid var(--encre); border-radius: 18px; background: var(--blanc);
+    padding: 14px 20px; box-shadow: var(--ombre);
+    color: var(--encre-douce); text-decoration: none; font-size: 17px;
+  }
+  .lien-tables:active { transform: translateY(2px); box-shadow: none; }
+  .lien-tables strong { color: var(--encre); font-size: 22px; }
+  .lien-tables .signe { font-size: 36px; font-weight: 700; color: var(--encre); background: var(--fluo-pale); border-radius: 12px; width: 56px; height: 56px; display: grid; place-items: center; flex: none; }
+  .lien-tables .fleche { margin-left: auto; font-size: 26px; color: var(--encre); }
 
   /* ---------- menu des jeux ---------- */
   .menu-tete { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -750,6 +760,7 @@ function ecranAccueil() {
         </button>`;
       }).join("")}
     </div>
+    <a class="lien-tables" href="tables.html"><span class="signe">×</span><span><strong>Tables de multiplication</strong><br>Réviser les tables de 2 à 9</span><span class="fleche">→</span></a>
     <div class="pied"><button class="bouton discret" id="vers-parent">Espace parent</button></div>
   `);
   app.querySelectorAll(".profil").forEach(b => b.onclick = () => ecranMenu(b.dataset.p));

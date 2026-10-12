@@ -3,7 +3,8 @@
 Jeu d'orthographe pour deux sœurs (iPad), publié sur GitHub Pages depuis la branche `main` :
 https://francoisdecaux.github.io/Cahier-dictee/
 
-Tout le jeu est dans `index.html`. Les listes de mots sont dans `mots.js`.
+Tout le jeu de dictée est dans `index.html`. Les listes de mots sont dans `mots.js`.
+Le jeu des tables de multiplication est dans `tables.html` (lien depuis l'accueil).
 
 ## Mise à jour hebdomadaire de la liste (la demande la plus fréquente)
 

@@ -24,3 +24,15 @@ Il est aussi possible de modifier une liste directement dans l'app, via « Espac
 6. **Le grand mélange** : un peu de chaque.
 
 Chaque partie compte 10 mots. Les mots ratés reviennent plus souvent dans les parties suivantes.
+
+## Tables de multiplication
+
+Depuis l'accueil, le bouton « Tables de multiplication » ouvre `tables.html`. On choisit les tables à réviser (de 2 à 9), puis un jeu :
+
+1. **Le bon résultat** : choisir la bonne réponse parmi quatre.
+2. **Le calcul** : taper le résultat sur le pavé numérique.
+3. **Le nombre caché** : trouver le nombre qui manque (7 × ? = 56).
+4. **Le chrono** : dix calculs le plus vite possible.
+5. **Le grand mélange** : un peu de chaque.
+
+Après une erreur, la correction donne une astuce (fois 9 = fois 10 moins une fois…). « Revoir les tables » permet de lire et d'écouter les tables, « Mes progrès » montre les calculs sus et ratés.

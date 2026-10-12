@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tables">
+<meta name="theme-color" content="#FDFCF7">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="apple-touch-icon" href="icone.png">
+<title>Tables de multiplication</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Playwrite+FR+Trad:wght@400&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --papier: #FDFCF7;
+    --carreau: #E3EAF6;
+    --carreau-fort: #CBD7EE;
+    --reglure: #AFC2E6;
+    --marge: #E4877E;
+    --encre: #1D3480;
+    --encre-douce: #51619A;
+    --fluo: #FFB05C;
+    --fluo-pale: #FFE3C2;
+    --vert: #2A9158;
+    --vert-pale: #DDF3E6;
+    --rouge: #CF3F35;
+    --rouge-pale: #FBE1DE;
+    --surligneur-vert: #8EE0A8;
+    --surligneur-rouge: #F7ADA5;
+    --blanc: #FFFFFF;
+    --c-grande: #FF9B3D;
+    --c-petite: #3FB2BF;
+    --ombre: 0 3px 0 rgba(29, 52, 128, .18);
+    --f-texte: "Andika", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+    --f-titre: "Playwrite FR Trad", "Snell Roundhand", "Brush Script MT", cursive;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--f-texte);
+    font-size: 18px;
+    color: var(--encre);
+    background-color: var(--papier);
+    background-image:
+      repeating-linear-gradient(to bottom, var(--carreau-fort) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(to bottom, var(--carreau) 0 1px, transparent 1px 8px),
+      repeating-linear-gradient(to right, var(--carreau-fort) 0 1px, transparent 1px 32px);
+    background-attachment: fixed;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+  [hidden] { display: none !important; }
+  button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--fluo); outline-offset: 2px; }
+
+  #app {
+    max-width: 900px;
+    margin: 0 auto;
+    min-height: 100%;
+    padding-inline: 16px;
+    padding-block: max(16px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ---------- éléments communs ---------- */
+  .titre-cursif {
+    font-family: var(--f-titre);
+    font-weight: 400;
+    font-size: clamp(34px, 6vw, 52px);
+    line-height: 1.5;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .sous-titre { margin: 0; color: var(--encre-douce); font-size: 20px; }
+  .bouton {
+    border: 2px solid var(--encre);
+    background: var(--blanc);
+    border-radius: 14px;
+    padding: 12px 22px;
+    font-weight: 700;
+    font-size: 19px;
+    box-shadow: var(--ombre);
+    min-height: 52px;
+    color: var(--encre);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .bouton:active { transform: translateY(2px); box-shadow: none; }
+  .bouton.plein { background: var(--encre); color: var(--blanc); }
+  .bouton.discret { border-color: transparent; background: transparent; box-shadow: none; color: var(--encre-douce); font-weight: 400; }
+  .ligne-boutons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .haut-parleur svg { width: 26px; height: 26px; }
+
+  /* ---------- accueil ---------- */
+  .accueil-tete { display: flex; flex-direction: column; gap: 4px; padding-top: 12px; }
+  .profils { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .profil {
+    position: relative;
+    text-align: left;
+    border: 2px solid var(--encre);
+    border-radius: 20px;
+    background: var(--blanc);
+    padding: 22px 22px 22px 40px;
+    box-shadow: 0 5px 0 var(--encre);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
+  }
+  .profil::before {
+    content: "";
+    position: absolute;
+    left: 20px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--marge);
+  }
+  .profil:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--encre); }
+  .profil .classe {
+    align-self: flex-start;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .08em;
+    padding: 2px 10px;
+    border-radius: 6px;
+    background: var(--c);
+    color: var(--encre);
+  }
+  .profil .prenom { font-size: 34px; font-weight: 700; line-height: 1.15; }
+  .profil .liste { color: var(--encre-douce); font-size: 17px; }
+  .pied { display: flex; justify-content: center; margin-top: auto; }
+
+  /* ---------- menu ---------- */
+  .menu-tete { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .menu-tete .qui { display: flex; flex-direction: column; flex: 1; min-width: 200px; }
+  .menu-tete .qui strong { font-size: 30px; line-height: 1.2; }
+  .menu-tete .qui span { color: var(--encre-douce); }
+  .bloc { display: flex; flex-direction: column; gap: 10px; }
+  .bloc-tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .bloc-tete h2 { margin: 0; font-size: 22px; }
+  .bloc-tete .bouton { min-height: 40px; padding: 4px 14px; font-size: 16px; }
+
+  .choix-tables { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+  .puce-table {
+    border: 2px solid var(--encre);
+    border-radius: 14px;
+    background: var(--blanc);
+    box-shadow: var(--ombre);
+    padding: 6px 6px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .puce-table:active { transform: translateY(2px); box-shadow: none; }
+  .puce-table .num { font-size: 30px; font-weight: 700; line-height: 1.2; }
+  .puce-table .num small { font-size: 18px; color: var(--encre-douce); font-weight: 400; }
+  .puce-table.on { background: var(--fluo); }
+  .puce-table.on .num small { color: var(--encre); }
+  .jauge { width: 80%; height: 8px; border-radius: 4px; background: var(--carreau); overflow: hidden; }
+  .puce-table.on .jauge { background: var(--fluo-pale); }
+  .jauge div { height: 100%; background: var(--vert); }
+
+  .jeux { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+  .carte-jeu {
+    text-align: left;
+    border: 2px solid var(--encre);
+    border-radius: 18px;
+    background: var(--blanc);
+    padding: 16px 18px;
+    box-shadow: var(--ombre);
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 6px;
+    min-height: 190px;
+  }
+  .carte-jeu:active { transform: translateY(2px); box-shadow: none; }
+  .carte-jeu .apercu {
+    font-size: 26px;
+    font-weight: 700;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--reglure);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .carte-jeu h3 { margin: 0; font-size: 22px; }
+  .carte-jeu p { margin: 0; color: var(--encre-douce); font-size: 16px; }
+  .carte-jeu .record { font-size: 15px; font-weight: 700; color: var(--encre-douce); }
+  .carte-jeu.vedette { background: var(--fluo-pale); }
+  .ap-trou { display: inline-block; width: 1.2em; border-bottom: 3px solid var(--encre); height: 1em; }
+  .ap-tuile { font-size: 18px; border: 2px solid var(--encre); border-radius: 8px; padding: 0 8px; background: var(--papier); }
+  .ap-juste { background: linear-gradient(transparent 55%, var(--fluo) 55%); padding: 0 2px; }
+  .ap-doux { color: var(--encre-douce); font-weight: 400; }
+  .ap-chrono svg { width: 30px; height: 30px; }
+
+  /* ---------- écran de jeu ---------- */
+  .barre { display: flex; align-items: center; gap: 12px; }
+  .barre .bouton { min-height: 44px; padding: 6px 14px; font-size: 16px; }
+  .progression { flex: 1; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .point { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--encre); background: var(--blanc); }
+  .point.ok { background: var(--vert); border-color: var(--vert); }
+  .point.ko { background: var(--rouge); border-color: var(--rouge); }
+  .point.bis { border-style: dashed; }
+  .point.actuel { transform: scale(1.3); box-shadow: 0 0 0 3px var(--fluo-pale); }
+  .etoiles { font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 4px; min-width: 64px; justify-content: flex-end; font-variant-numeric: tabular-nums; }
+  .etoiles svg { width: 26px; height: 26px; }
+
+  .scene {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    background: var(--blanc);
+    border: 2px solid var(--encre);
+    border-radius: 22px;
+    padding: 24px 18px 28px;
+    position: relative;
+  }
+  .consigne { margin: 0; font-size: 22px; font-weight: 700; text-align: center; text-wrap: balance; }
+  .nom-jeu { margin: 0; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre-douce); }
+  .zone { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .message { min-height: 30px; font-size: 20px; font-weight: 700; text-align: center; }
+  .message.ok { color: var(--vert); }
+  .message.ko { color: var(--rouge); }
+
+  .reglure {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    min-height: 112px;
+    padding: 16px 16px 16px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    background-color: var(--papier);
+    background-image:
+      linear-gradient(to right, transparent 36px, var(--marge) 36px 38px, transparent 38px),
+      repeating-linear-gradient(to bottom, var(--reglure) 0 1px, transparent 1px 28px),
+      repeating-linear-gradient(to bottom, var(--carreau) 0 1px, transparent 1px 7px);
+    border-radius: 10px;
+  }
+
+  /* le calcul écrit sur la ligne du cahier */
+  .calcul {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: .28em;
+    font-size: clamp(46px, 9vw, 76px);
+    font-weight: 700;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+  }
+  .calcul .op { color: var(--encre-douce); font-weight: 400; }
+  .calcul .case {
+    display: inline-block;
+    min-width: 1.5em;
+    text-align: center;
+    border-bottom: 4px solid var(--encre);
+    background: var(--fluo-pale);
+    border-radius: 8px 8px 0 0;
+    padding: 0 .12em;
+  }
+  .calcul .case.vide { color: var(--encre-douce); opacity: .45; }
+  .calcul .case.juste { background: var(--vert-pale); border-color: var(--vert); color: var(--vert); }
+  .calcul .case.faux { background: var(--rouge-pale); border-color: var(--rouge); color: var(--rouge); }
+  .calcul .ko { color: var(--rouge); text-decoration: underline 3px; text-underline-offset: 6px; }
+  .calcul .bon { color: #16693A; text-decoration: underline 3px; text-underline-offset: 6px; }
+  .calcul.petit { font-size: clamp(30px, 5.5vw, 44px); }
+
+  /* jeu 1 : choix parmi quatre */
+  .choix { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 480px; }
+  .choix button {
+    font-size: clamp(32px, 6vw, 44px);
+    font-weight: 700;
+    padding: 12px 18px;
+    border-radius: 16px;
+    border: 2px solid var(--encre);
+    background: var(--papier);
+    box-shadow: var(--ombre);
+    font-variant-numeric: tabular-nums;
+  }
+  .choix button:active { transform: translateY(2px); box-shadow: none; }
+  .choix button.faux { background: var(--rouge-pale); border-color: var(--rouge); color: var(--rouge); text-decoration: line-through; box-shadow: none; }
+  .choix button.juste { background: var(--vert-pale); border-color: var(--vert); color: var(--vert); }
+
+  /* pavé numérique */
+  .pave-num { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 380px; }
+  .pave-num .touche {
+    height: 70px;
+    font-size: 34px;
+    font-weight: 700;
+    border: 2px solid var(--encre);
+    border-radius: 14px;
+    background: var(--papier);
+    box-shadow: 0 3px 0 rgba(29, 52, 128, .25);
+    padding: 0;
+  }
+  .pave-num .touche:active { transform: translateY(2px); box-shadow: none; background: var(--fluo-pale); }
+  .pave-num .touche.effacer { font-size: 26px; background: var(--fluo-pale); }
+  .pave-num .touche.valider { background: var(--encre); color: var(--blanc); font-size: 21px; }
+
+  /* chrono */
+  .chrono { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 20px; min-width: 64px; justify-content: flex-end; font-variant-numeric: tabular-nums; }
+  .chrono svg { width: 24px; height: 24px; }
+
+  /* surligneur quand c'est juste */
+  .surligne { position: relative; z-index: 0; }
+  .surligne::after {
+    content: "";
+    position: absolute;
+    left: -6px; right: -6px; bottom: 6%;
+    height: 45%;
+    background: var(--surligneur-vert);
+    z-index: -1;
+    border-radius: 3px;
+    transform-origin: left;
+    animation: surligner .45s ease-out both;
+  }
+  @keyframes surligner { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .surligne.rouge::after { background: var(--surligneur-rouge); }
+
+  /* correction après une erreur */
+  .correction { display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: 680px; align-items: center; }
+  .ligne-corr { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .etiquette { font-size: 17px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--encre-douce); }
+  .astuce { background: var(--fluo-pale); border-radius: 12px; padding: 10px 18px; font-size: 20px; text-align: center; max-width: 560px; margin: 0; text-wrap: balance; }
+  .points-calcul { display: grid; gap: 5px; justify-content: center; }
+  .points-calcul i { display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--c-petite); }
+  .secoue { animation: secouer .4s; }
+  @keyframes secouer { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+
+  /* fin de série */
+  .fin { align-items: center; text-align: center; }
+  .tampon {
+    font-family: var(--f-titre);
+    font-size: clamp(34px, 7vw, 50px);
+    color: var(--rouge);
+    border: 4px double var(--rouge);
+    border-radius: 12px;
+    padding: 4px 26px 10px;
+    transform: rotate(-6deg);
+    animation: tamponner .5s cubic-bezier(.3, 1.6, .5, 1) both;
+    margin: 10px 0;
+  }
+  @keyframes tamponner { from { transform: rotate(-6deg) scale(2.2); opacity: 0; } to { transform: rotate(-6deg) scale(1); opacity: 1; } }
+  .score-fin { font-size: 64px; font-weight: 700; line-height: 1; }
+  .score-fin small { font-size: 28px; color: var(--encre-douce); }
+  .a-revoir { width: 100%; max-width: 560px; text-align: left; }
+  .a-revoir h3 { margin: 0 0 8px; font-size: 20px; }
+  .a-revoir ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+  .a-revoir li { font-size: 24px; font-weight: 700; padding: 4px 12px; border-radius: 8px; background: var(--fluo-pale); font-variant-numeric: tabular-nums; }
+
+  /* revoir les tables */
+  .panneau { background: var(--blanc); border: 2px solid var(--encre); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .panneau h2 { margin: 0; font-size: 24px; }
+  .aide { color: var(--encre-douce); font-size: 15px; margin: 0; }
+  .tables-revoir { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .liste-table { display: flex; flex-direction: column; }
+  .liste-table button {
+    border: none;
+    border-bottom: 1px solid var(--carreau-fort);
+    background: transparent;
+    text-align: left;
+    font-size: 26px;
+    padding: 6px 10px;
+    font-variant-numeric: tabular-nums;
+    border-radius: 6px;
+  }
+  .liste-table button:last-child { border-bottom: none; }
+  .liste-table button b { float: right; }
+  .liste-table button.lu { background: var(--fluo-pale); }
+
+  /* progrès */
+  .tableau-wrap { overflow-x: auto; }
+  .grille { border-collapse: separate; border-spacing: 4px; font-size: 18px; font-variant-numeric: tabular-nums; margin: 0 auto; }
+  .grille th { font-size: 15px; color: var(--encre-douce); font-weight: 700; padding: 2px 4px; }
+  .grille td { width: 44px; height: 40px; text-align: center; border-radius: 8px; font-weight: 700; background: var(--papier); border: 1px solid var(--carreau-fort); }
+  .grille td.c-ok { background: var(--vert-pale); border-color: var(--vert); color: #16693A; }
+  .grille td.c-moyen { background: var(--fluo-pale); border-color: var(--fluo); }
+  .grille td.c-ko { background: var(--rouge-pale); border-color: var(--rouge); color: var(--rouge); }
+  .grille td.c-vide { color: var(--carreau-fort); }
+  .legende { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: center; font-size: 15px; color: var(--encre-douce); }
+  .legende span::before { content: ""; display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 6px; vertical-align: -2px; border: 1px solid var(--carreau-fort); background: var(--papier); }
+  .legende .l-ok::before { background: var(--vert-pale); border-color: var(--vert); }
+  .legende .l-moyen::before { background: var(--fluo-pale); border-color: var(--fluo); }
+  .legende .l-ko::before { background: var(--rouge-pale); border-color: var(--rouge); }
+
+  @media (max-width: 560px) {
+    .pave-num .touche { height: 60px; font-size: 30px; }
+    .grille td { width: 32px; height: 34px; font-size: 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- mots.js donne les prénoms et les classes ; le jeu marche aussi sans -->
+<script>document.write('<script src="mots.js?v=' + Date.now() + '"><\/script>');</script>
+<script>
+"use strict";
+
+/* =========================================================
+   Outils
+   ========================================================= */
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const alea = n => Math.floor(Math.random() * n);
+const choisir = t => t[alea(t.length)];
+function melanger(t) { const a = t.slice(); for (let i = a.length - 1; i > 0; i--) { const j = alea(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+// même rangement que le jeu de dictée : les prénoms tapés dans l'espace parent sont partagés
+const Stock = {
+  lire(cle, defaut) { try { const v = localStorage.getItem("dictee:" + cle); return v ? JSON.parse(v) : defaut; } catch (e) { return defaut; } },
+  ecrire(cle, v) { try { localStorage.setItem("dictee:" + cle, JSON.stringify(v)); } catch (e) {} },
+  effacer(cle) { try { localStorage.removeItem("dictee:" + cle); } catch (e) {} }
+};
+
+const ICONES = {
+  etoile: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 16.8 6.2 20.1l1.4-6.4L2.7 9.3l6.5-.7z" fill="#FFB05C" stroke="#1D3480" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+  son: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  chrono: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5" fill="#FFE3C2" stroke="#1D3480" stroke-width="1.8"/><path d="M12 13.5V9.5M10 3h4M12 3v2.5" fill="none" stroke="#1D3480" stroke-width="1.8" stroke-linecap="round"/></svg>'
+};
+
+/* =========================================================
+   Profils et tables choisies
+   ========================================================= */
+const PROFILS = ["grande", "petite"];
+const TABLES = [2, 3, 4, 5, 6, 7, 8, 9];
+const INFOS = typeof LISTES !== "undefined" ? LISTES : {};
+
+function prenom(p) { return Stock.lire("prenom:" + p, "") || (INFOS[p] && INFOS[p].prenom) || (p === "grande" ? "La grande" : "La petite"); }
+function classe(p) { return (INFOS[p] && INFOS[p].classe) || (p === "grande" ? "CM1" : "CE1"); }
+function niveau(p) { return (INFOS[p] && INFOS[p].niveau) || (p === "petite" ? 1 : 2); }
+
+function tablesChoisies(p) {
+  const t = Stock.lire("tables:choix:" + p, null);
+  const ok = Array.isArray(t) ? t.filter(x => TABLES.includes(x)) : [];
+  if (ok.length) return ok.sort((a, b) => a - b);
+  return niveau(p) === 1 ? [2, 3, 4, 5] : TABLES.slice();
+}
+function nomTables(t) {
+  if (t.length === TABLES.length) return "Toutes les tables";
+  if (t.length === 1) return "Table de " + t[0];
+  return "Tables de " + t.slice(0, -1).join(", ") + " et " + t[t.length - 1];
+}
+
+/* =========================================================
+   Statistiques et tirage des séries
+   ========================================================= */
+// 7 × 8 et 8 × 7, c'est le même calcul à retenir
+const cleCalcul = (a, b) => Math.min(a, b) + "x" + Math.max(a, b);
+function stats(p) { return Stock.lire("tables:stats:" + p, {}); }
+function noterResultat(p, c, reussi) {
+  const s = stats(p);
+  const x = s[c.cle] || { ok: 0, ko: 0, vu: 0 };
+  x.vu++;
+  if (reussi) x.ok++; else x.ko++;
+  s[c.cle] = x;
+  Stock.ecrire("tables:stats:" + p, s);
+}
+const estSu = s => !!s && s.ok >= 2 && s.ok >= 2 * s.ko;
+function maitrise(p, t, st = stats(p)) {
+  let n = 0;
+  for (let b = 1; b <= 10; b++) if (estSu(st[cleCalcul(t, b)])) n++;
+  return n / 10;
+}
+
+function tirerSerie(p, tables, n = 10) {
+  const st = stats(p);
+  const vus = new Set(), pool = [];
+  tables.forEach(t => {
+    for (let b = 1; b <= 10; b++) {
+      const cle = cleCalcul(t, b);
+      if (vus.has(cle)) continue;
+      vus.add(cle);
+      const s = st[cle] || { ok: 0, ko: 0, vu: 0 };
+      let poids = 1 + 2 * Math.max(0, s.ko - s.ok * 0.5);
+      if (!s.vu) poids += 2;
+      if (b === 1 || b === 10) poids *= 0.3; // × 1 et × 10 : trop faciles, on les voit moins
+      pool.push({ t, b, cle, poids });
+    }
+  });
+  const serie = [];
+  while (serie.length < n && pool.length) {
+    const total = pool.reduce((a, x) => a + x.poids, 0);
+    let r = Math.random() * total, i = 0;
+    for (; i < pool.length - 1; i++) { r -= pool[i].poids; if (r <= 0) break; }
+    serie.push(pool.splice(i, 1)[0]);
+  }
+  // le plus souvent dans l'ordre de la table (7 × 8), parfois à l'envers (8 × 7)
+  const envers = niveau(p) === 1 ? 0.2 : 0.35;
+  return serie.map(x => Math.random() < envers ? { a: x.b, b: x.t, cle: x.cle } : { a: x.t, b: x.b, cle: x.cle });
+}
+
+/* =========================================================
+   Voix et sons
+   ========================================================= */
+let voixFr = null;
+function chercherVoix() {
+  if (!("speechSynthesis" in window)) return;
+  const toutes = speechSynthesis.getVoices();
+  const fr = toutes.filter(v => /^fr[-_]FR/i.test(v.lang));
+  voixFr = fr.find(v => /Thomas|Audrey|Aurélie|Marie|Amélie/i.test(v.name)) || fr[0] || toutes.find(v => /^fr/i.test(v.lang)) || null;
+}
+if ("speechSynthesis" in window) { chercherVoix(); speechSynthesis.onvoiceschanged = chercherVoix; }
+
+let voixReveillee = false;
+function reveillerVoix() {
+  if (voixReveillee || !("speechSynthesis" in window)) return;
+  voixReveillee = true;
+  try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } catch (e) {}
+}
+document.addEventListener("touchend", reveillerVoix, true);
+document.addEventListener("click", reveillerVoix, true);
+
+let parole = null;
+function dire(texte) {
+  if (!("speechSynthesis" in window)) return;
+  if (!voixFr) chercherVoix();
+  const parler = () => {
+    parole = new SpeechSynthesisUtterance(texte);
+    parole.lang = "fr-FR";
+    if (voixFr) parole.voice = voixFr;
+    parole.rate = 0.85;
+    speechSynthesis.speak(parole);
+    if (speechSynthesis.paused) speechSynthesis.resume();
+  };
+  if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); setTimeout(parler, 150); }
+  else parler();
+}
+const aDire = c => `${c.a} fois ${c.b}, ${c.a * c.b}`;
+
+let audio = null;
+function son(type) {
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    const t = audio.currentTime;
+    const notes = type === "ok" ? [660, 990] : type === "fin" ? [523, 659, 784, 1047] : [196, 175];
+    notes.forEach((f, i) => {
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = type === "ko" ? "triangle" : "sine";
+      o.frequency.value = f;
+      const d = t + i * (type === "ko" ? 0.14 : 0.11);
+      g.gain.setValueAtTime(0.0001, d);
+      g.gain.exponentialRampToValueAtTime(type === "ko" ? 0.12 : 0.2, d + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, d + 0.32);
+      o.connect(g).connect(audio.destination);
+      o.start(d); o.stop(d + 0.35);
+    });
+  } catch (e) {}
+}
+
+/* =========================================================
+   Calculs : mauvaises réponses crédibles, astuces
+   ========================================================= */
+// Les erreurs typiques : la ligne d'à côté dans la table, ou un résultat tout proche
+function leurres(c, n = 3) {
+  const r = c.a * c.b;
+  const valable = (v, t) => v > 0 && v !== r && !t.includes(v);
+  const voisins = melanger([c.a * (c.b + 1), c.a * (c.b - 1), (c.a + 1) * c.b, (c.a - 1) * c.b]);
+  const proches = melanger([r + 1, r - 1, r + 2, r - 2, r + 10, r - 10]);
+  if (r > 10 && r % 10) proches.unshift(+String(r).split("").reverse().join("")); // 56 → 65
+  const pris = [];
+  for (const v of voisins) if (pris.length < 2 && valable(v, pris)) pris.push(v);
+  for (const v of proches) if (pris.length < n && valable(v, pris)) pris.push(v);
+  for (const v of voisins) if (pris.length < n && valable(v, pris)) pris.push(v);
+  return pris;
+}
+
+function astuce(a, b) {
+  const m = [1, 10, 2, 5, 9, 4, 3, 8, 6, 7].find(x => x === a || x === b);
+  const k = m === a ? b : a, r = a * b;
+  switch (m) {
+    case 1: return `Fois 1, le nombre ne change pas : ${k} × 1 = ${k}.`;
+    case 10: return `Fois 10, on ajoute un zéro : ${k} devient ${r}.`;
+    case 2: return `Fois 2, c'est le double : ${k} + ${k} = ${r}.`;
+    case 5: return `Fois 5, c'est la moitié de fois 10 : la moitié de ${10 * k}, c'est ${r}.`;
+    case 9: return `Fois 9, c'est fois 10 moins une fois : ${10 * k} − ${k} = ${r}.`;
+    case 4: return `Fois 4, c'est le double du double : ${k} → ${2 * k} → ${r}.`;
+    case 3: return `Fois 3, c'est le double plus une fois : ${2 * k} + ${k} = ${r}.`;
+    case 8: return `Fois 8, on fait trois fois le double : ${k} → ${2 * k} → ${4 * k} → ${r}.`;
+    case 6: return `Fois 6, c'est fois 5 plus une fois : ${5 * k} + ${k} = ${r}.`;
+    default: return `Fois 7, c'est fois 5 plus fois 2 : ${5 * k} + ${2 * k} = ${r}.`;
+  }
+}
+
+// Le calcul « a × b = r » ; trou = 0, 1 ou 2 pour la case à remplir
+function equation(c, trou, contenu, classeCase) {
+  return `<div class="calcul" id="calcul">${morceaux(c, trou, `<span class="case${classeCase ? " " + classeCase : ""}" id="case">${contenu}</span>`)}</div>`;
+}
+function morceaux(c, trou, html) {
+  const v = [c.a, c.b, c.a * c.b];
+  const m = k => k === trou ? html : `<span>${v[k]}</span>`;
+  return `${m(0)}<span class="op">×</span>${m(1)}<span class="op">=</span>${m(2)}`;
+}
+
+/* =========================================================
+   Navigation
+   ========================================================= */
+let S = null; // la partie en cours
+let minuteries = [], intervalles = [];
+function nettoyer() {
+  minuteries.forEach(clearTimeout); minuteries = [];
+  intervalles.forEach(clearInterval); intervalles = [];
+  document.onkeydown = null;
+  if ("speechSynthesis" in window && (speechSynthesis.speaking || speechSynthesis.pending)) speechSynthesis.cancel();
+}
+function plusTard(f, ms) { minuteries.push(setTimeout(f, ms)); }
+function afficher(html) { nettoyer(); app.innerHTML = html; window.scrollTo(0, 0); }
+
+/* ---------- Accueil ---------- */
+function ecranAccueil() {
+  afficher(`
+    <header class="accueil-tete">
+      <h1 class="titre-cursif">Tables de multiplication</h1>
+      <p class="sous-titre">Qui joue aujourd'hui ?</p>
+    </header>
+    <div class="profils">
+      ${PROFILS.map(p => `<button class="profil" data-p="${p}" style="--c: var(--c-${p})">
+          <span class="classe">${esc(classe(p))}</span>
+          <span class="prenom">${esc(prenom(p))}</span>
+          <span class="liste">${esc(nomTables(tablesChoisies(p)))}</span>
+        </button>`).join("")}
+    </div>
+    <div class="pied"><a class="bouton" href="index.html">← Cahier de dictée</a></div>
+  `);
+  app.querySelectorAll(".profil").forEach(b => b.onclick = () => ecranMenu(b.dataset.p));
+}
+
+/* ---------- Menu ---------- */
+const JEUX = [
+  { id: "choix", nom: "Le bon résultat", desc: "Trouve la bonne réponse parmi quatre." },
+  { id: "calcul", nom: "Le calcul", desc: "Tape le résultat toi-même." },
+  { id: "cache", nom: "Le nombre caché", desc: "Trouve le nombre qui manque dans le calcul." },
+  { id: "chrono", nom: "Le chrono", desc: "Dix calculs, le plus vite possible." },
+  { id: "melange", nom: "Le grand mélange", desc: "Un peu de chaque jeu, au hasard." }
+];
+
+function apercu(id, p) {
+  const t = choisir(tablesChoisies(p)), b = 2 + alea(8), c = { a: t, b };
+  if (id === "choix") return `${t} × ${b} <span class="ap-tuile">${leurres(c, 1)[0]}</span><span class="ap-tuile ap-juste">${t * b}</span>`;
+  if (id === "calcul") return `${t} × ${b} = <span class="ap-trou"></span>`;
+  if (id === "cache") return `${t} × <span class="ap-trou"></span> = ${t * b}`;
+  if (id === "chrono") return `<span class="ap-chrono">${ICONES.chrono}</span> ${t} × ${b} = <span class="ap-trou"></span>`;
+  return `<span class="ap-tuile">?</span> × <span class="ap-tuile">?</span> <span class="ap-doux">=</span> <span class="ap-trou"></span>`;
+}
+
+function texteRecord(id, rec) {
+  if (!rec) return "Pas encore joué";
+  return `Record : ${rec.points}/${rec.sur}` + (id === "chrono" && rec.temps ? ` en ${Math.round(rec.temps / 1000)} s` : "");
+}
+
+function ecranMenu(p) {
+  afficher(`
+    <div class="menu-tete">
+      <button class="bouton" id="retour">← Changer</button>
+      <div class="qui"><strong>${esc(prenom(p))}</strong><span id="nom-tables"></span></div>
+    </div>
+    <section class="bloc">
+      <div class="bloc-tete">
+        <h2>Quelles tables ?</h2>
+        <button class="bouton" id="toutes">Toutes</button>
+      </div>
+      <div class="choix-tables" id="choix-tables"></div>
+    </section>
+    <div class="jeux">
+      ${JEUX.map(j => `<button class="carte-jeu${j.id === "melange" ? " vedette" : ""}" data-j="${j.id}">
+          <div class="apercu" aria-hidden="true">${apercu(j.id, p)}</div>
+          <h3>${j.nom}</h3>
+          <p>${j.desc}</p>
+          <span class="record">${texteRecord(j.id, Stock.lire(`tables:record:${p}:${j.id}`, null))}</span>
+        </button>`).join("")}
+    </div>
+    <div class="ligne-boutons">
+      <button class="bouton" id="revoir">Revoir les tables</button>
+      <button class="bouton" id="progres">Mes progrès</button>
+    </div>
+  `);
+  const st = stats(p);
+  function dessinerTables() {
+    const choix = tablesChoisies(p);
+    document.getElementById("nom-tables").textContent = nomTables(choix);
+    const zone = document.getElementById("choix-tables");
+    zone.innerHTML = TABLES.map(t => `<button class="puce-table${choix.includes(t) ? " on" : ""}" data-t="${t}" aria-pressed="${choix.includes(t)}">
+        <span class="num"><small>×</small>${t}</span>
+        <span class="jauge" aria-label="table de ${t} sue à ${Math.round(maitrise(p, t, st) * 100)} %"><div style="width:${maitrise(p, t, st) * 100}%"></div></span>
+      </button>`).join("");
+    zone.querySelectorAll(".puce-table").forEach(b => b.onclick = () => {
+      const t = +b.dataset.t;
+      let c = tablesChoisies(p);
+      c = c.includes(t) ? c.filter(x => x !== t) : c.concat(t);
+      if (!c.length) return; // il faut garder au moins une table
+      Stock.ecrire("tables:choix:" + p, c);
+      dessinerTables();
+    });
+  }
+  dessinerTables();
+  document.getElementById("toutes").onclick = () => { Stock.ecrire("tables:choix:" + p, TABLES.slice()); dessinerTables(); };
+  document.getElementById("retour").onclick = ecranAccueil;
+  document.getElementById("revoir").onclick = () => ecranRevoir(p);
+  document.getElementById("progres").onclick = () => ecranProgres(p);
+  app.querySelectorAll(".carte-jeu").forEach(b => b.onclick = () => lancerPartie(p, b.dataset.j));
+}
+
+/* =========================================================
+   Déroulement d'une partie
+   ========================================================= */
+function lancerPartie(p, jeu) {
+  const serie = tirerSerie(p, tablesChoisies(p));
+  // total = nombre de calculs comptés ; les calculs ratés sont rejoués à la fin ("deuxième chance")
+  S = { p, jeu, niveau: niveau(p), serie, total: serie.length, etats: [], i: 0, points: 0, resultats: [], temps: 0, depart: null };
+  if (!S.serie.length) { ecranMenu(p); return; }
+  questionSuivante();
+}
+
+const tempsEcoule = () => S.temps + (S.depart ? performance.now() - S.depart : 0);
+const enSecondes = ms => Math.floor(ms / 1000) + " s";
+function arreterChrono() { if (S.depart) { S.temps += performance.now() - S.depart; S.depart = null; } }
+
+function questionSuivante() {
+  const c = S.serie[S.i];
+  S.fini = false;
+  const type = S.jeu === "melange" ? choisir(["choix", "calcul", "cache"]) : S.jeu;
+  const jeu = JEUX.find(j => j.id === type);
+  const bis = S.i >= S.total;
+  const chrono = S.jeu === "chrono";
+  afficher(`
+    <div class="barre">
+      <button class="bouton" id="stop">✕ Arrêter</button>
+      <div class="progression">${S.serie.map((_, k) => {
+        const r = S.etats[k];
+        return `<span class="point${r === true ? " ok" : r === false ? " ko" : ""}${k >= S.total ? " bis" : ""}${k === S.i ? " actuel" : ""}"></span>`;
+      }).join("")}</div>
+      ${chrono
+        ? `<div class="chrono">${ICONES.chrono}<span id="temps">${enSecondes(S.temps)}</span></div>`
+        : `<div class="etoiles">${ICONES.etoile}<span>${S.points}</span></div>`}
+    </div>
+    <main class="scene">
+      <p class="nom-jeu">${jeu.nom}${bis ? " · deuxième chance" : ""}</p>
+      <p class="consigne" id="consigne"></p>
+      <div class="zone" id="zone"></div>
+      <div class="message" id="message" aria-live="polite"></div>
+    </main>
+  `);
+  document.getElementById("stop").onclick = () => ecranMenu(S.p);
+  if (chrono) {
+    S.depart = performance.now();
+    const aff = document.getElementById("temps");
+    intervalles.push(setInterval(() => { aff.textContent = enSecondes(tempsEcoule()); }, 250));
+  }
+  MOTEURS[type](c, document.getElementById("zone"));
+}
+
+function consigne(t) { document.getElementById("consigne").textContent = t; }
+function message(t, classe) {
+  const m = document.getElementById("message");
+  if (!m) return;
+  m.textContent = t; m.className = "message" + (classe ? " " + classe : "");
+}
+function secouer(n) { if (!n) return; n.classList.remove("secoue"); void n.offsetWidth; n.classList.add("secoue"); }
+
+const BRAVOS = ["Bravo !", "Super !", "Parfait !", "Génial !", "Excellent !", "Oui !"];
+function gagne(c) {
+  if (S.fini) return;
+  S.fini = true;
+  arreterChrono();
+  const bis = S.i >= S.total;
+  if (!bis) { S.points++; S.resultats.push({ c, ok: true }); }
+  S.etats[S.i] = true;
+  noterResultat(S.p, c, true);
+  son("ok");
+  message(bis ? "Cette fois, c'est juste !" : choisir(BRAVOS), "ok");
+  const calc = document.getElementById("calcul");
+  if (calc) calc.classList.add("surligne");
+  plusTard(passer, S.jeu === "chrono" ? 700 : 1100);
+}
+
+// Petits points rangés en rectangle, dans le sens le plus large
+function pointsCalcul(c) {
+  if (c.a * c.b > 50) return "";
+  return `<div class="points-calcul" style="grid-template-columns: repeat(${Math.max(c.a, c.b)}, 14px)" aria-hidden="true">${"<i></i>".repeat(c.a * c.b)}</div>`;
+}
+
+// Erreur : on montre la correction, puis on passe au calcul suivant
+function echec(c, trou, donne) {
+  if (S.fini) return;
+  S.fini = true;
+  arreterChrono();
+  const bis = S.i >= S.total;
+  // au plus 5 deuxièmes chances par série, et aucune au chrono
+  const rejoue = !bis && S.jeu !== "chrono" && S.serie.length - S.total < 5;
+  if (!bis) { S.resultats.push({ c, ok: false }); if (rejoue) S.serie.push(c); }
+  S.etats[S.i] = false;
+  noterResultat(S.p, c, false);
+  son("ko");
+  const juste = [c.a, c.b, c.a * c.b][trou];
+  consigne("Regarde bien la correction");
+  const zone = document.getElementById("zone");
+  zone.innerHTML = `
+    <div class="correction">
+      <div class="ligne-corr">
+        <span class="etiquette">Tu as répondu</span>
+        <div class="calcul petit surligne rouge">${morceaux(c, trou, `<span class="ko">${esc(donne)}</span>`)}</div>
+      </div>
+      <div class="reglure ligne-corr">
+        <span class="etiquette">La bonne réponse</span>
+        <div class="calcul surligne">${morceaux(c, trou, `<span class="bon">${juste}</span>`)}</div>
+      </div>
+      ${S.niveau === 1 ? pointsCalcul(c) : ""}
+      <p class="astuce">${esc(astuce(c.a, c.b))}</p>
+    </div>
+    <button class="bouton plein" id="compris">J'ai compris →</button>
+  `;
+  message(rejoue ? "Pas grave ! Ce calcul reviendra à la fin de la série." : "Pas grave ! Ce calcul reviendra dans une prochaine partie.", "ko");
+  document.getElementById("compris").onclick = passer;
+  plusTard(() => dire(aDire(c)), 300);
+}
+
+function passer() {
+  S.i++;
+  if (S.i >= S.serie.length) ecranFin(); else questionSuivante();
+}
+
+/* ---------- Fin de série ---------- */
+function ecranFin() {
+  const { p, jeu, points } = S;
+  const sur = S.total;
+  const temps = Math.round(S.temps);
+  const cle = `tables:record:${p}:${jeu}`;
+  const rec = Stock.lire(cle, null);
+  const nouveau = !rec || points / sur > rec.points / rec.sur
+    || (jeu === "chrono" && points / sur === rec.points / rec.sur && (!rec.temps || temps < rec.temps));
+  if (nouveau) Stock.ecrire(cle, jeu === "chrono" ? { points, sur, temps } : { points, sur });
+  const ratio = points / sur;
+  const tampon = ratio >= 0.9 ? "Excellent !" : ratio >= 0.7 ? "Très bien !" : ratio >= 0.5 ? "Bien !" : "Continue !";
+  const aRevoir = S.resultats.filter(r => !r.ok).map(r => r.c);
+  const phrase = jeu === "chrono"
+    ? `${points} bonne${points > 1 ? "s" : ""} réponse${points > 1 ? "s" : ""} en ${enSecondes(temps)}.${nouveau && points > 0 ? " Nouveau record !" : ""}`
+    : nouveau && points > 0 ? "Nouveau record !" : `${prenom(p)}, tu as gagné ${points} étoile${points > 1 ? "s" : ""}.`;
+  afficher(`
+    <main class="scene fin">
+      <div class="tampon">${tampon}</div>
+      <div class="score-fin">${points}<small> / ${sur}</small></div>
+      <p class="sous-titre">${esc(phrase)}</p>
+      ${aRevoir.length ? `<div class="a-revoir"><h3>Les calculs à revoir</h3><ul>${aRevoir.map(c => `<li>${c.a} × ${c.b} = ${c.a * c.b}</li>`).join("")}</ul></div>` : ""}
+      <div class="ligne-boutons">
+        <button class="bouton plein" id="rejouer">Rejouer</button>
+        <button class="bouton" id="menu">Choisir un autre jeu</button>
+      </div>
+    </main>
+  `);
+  son("fin");
+  document.getElementById("rejouer").onclick = () => lancerPartie(p, jeu);
+  document.getElementById("menu").onclick = () => ecranMenu(p);
+}
+
+/* =========================================================
+   Les jeux
+   ========================================================= */
+const MOTEURS = {};
+
+/* ---------- Pavé numérique ---------- */
+function pave(zone, onValider) {
+  let valeur = "";
+  const p = document.createElement("div");
+  p.className = "pave-num";
+  p.innerHTML = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "⌫", "0", "OK"].map(k =>
+    `<button class="touche${k === "⌫" ? " effacer" : k === "OK" ? " valider" : ""}" data-k="${k}" aria-label="${k === "⌫" ? "effacer" : k === "OK" ? "valider" : k}">${k}</button>`).join("");
+  zone.appendChild(p);
+  const kase = document.getElementById("case");
+  function montrer() { kase.textContent = valeur || "?"; kase.classList.toggle("vide", !valeur); }
+  function frappe(k) {
+    if (S.fini) return;
+    if (k === "OK") { if (valeur) onValider(valeur); return; }
+    if (k === "⌫") valeur = valeur.slice(0, -1);
+    else if (valeur.length < 3) valeur = (valeur + k).replace(/^0+(?=\d)/, "");
+    montrer();
+  }
+  p.querySelectorAll(".touche").forEach(t => t.onclick = () => frappe(t.dataset.k));
+  document.onkeydown = ev => {
+    if (ev.key === "Enter") frappe("OK");
+    else if (ev.key === "Backspace") frappe("⌫");
+    else if (/^\d$/.test(ev.key)) frappe(ev.key);
+  };
+  montrer();
+}
+
+function repondre(c, trou, valeur) {
+  const juste = [c.a, c.b, c.a * c.b][trou];
+  const kase = document.getElementById("case");
+  if (+valeur === juste) { kase.classList.add("juste"); gagne(c); return; }
+  kase.classList.add("faux");
+  secouer(document.getElementById("calcul"));
+  S.fini = true;
+  plusTard(() => { S.fini = false; echec(c, trou, valeur); }, 800);
+}
+
+/* ---------- 1. Le bon résultat ---------- */
+MOTEURS.choix = (c, zone) => {
+  consigne("Choisis le bon résultat");
+  const r = c.a * c.b;
+  const options = melanger([r, ...leurres(c, 3)]);
+  zone.innerHTML = `
+    <div class="reglure">${equation(c, 2, "?", "vide")}</div>
+    <div class="choix">${options.map(o => `<button data-o="${o}">${o}</button>`).join("")}</div>
+  `;
+  zone.querySelectorAll(".choix button").forEach(b => b.onclick = () => {
+    if (S.fini) return;
+    const kase = document.getElementById("case");
+    kase.textContent = b.dataset.o; kase.classList.remove("vide");
+    if (+b.dataset.o === r) {
+      b.classList.add("juste"); kase.classList.add("juste");
+      zone.querySelectorAll(".choix button:not(.juste)").forEach(x => x.disabled = true);
+      gagne(c);
+    } else {
+      b.classList.add("faux"); kase.classList.add("faux");
+      zone.querySelectorAll(".choix button").forEach(x => { x.disabled = true; if (+x.dataset.o === r) x.classList.add("juste"); });
+      S.fini = true; son("ko");
+      plusTard(() => { S.fini = false; echec(c, 2, b.dataset.o); }, 1100);
+    }
+  });
+};
+
+/* ---------- 2. Le calcul (et le chrono) ---------- */
+MOTEURS.calcul = (c, zone) => {
+  consigne("Combien ça fait ?");
+  zone.innerHTML = `<div class="reglure">${equation(c, 2, "?", "vide")}</div>`;
+  pave(zone, v => repondre(c, 2, v));
+};
+MOTEURS.chrono = MOTEURS.calcul;
+
+/* ---------- 3. Le nombre caché ---------- */
+MOTEURS.cache = (c, zone) => {
+  consigne("Quel nombre manque ?");
+  const trou = Math.random() < 0.5 ? 0 : 1;
+  zone.innerHTML = `<div class="reglure">${equation(c, trou, "?", "vide")}</div>`;
+  pave(zone, v => repondre(c, trou, v));
+};
+
+/* =========================================================
+   Revoir les tables
+   ========================================================= */
+function ecranRevoir(p) {
+  const choix = tablesChoisies(p);
+  afficher(`
+    <div class="menu-tete">
+      <button class="bouton" id="retour">← Retour</button>
+      <div class="qui"><strong>Revoir les tables</strong><span>Touche une ligne pour l'entendre</span></div>
+    </div>
+    <div class="tables-revoir">
+      ${choix.map(t => `<section class="panneau">
+          <div class="bloc-tete">
+            <h2>Table de ${t}</h2>
+            <button class="bouton haut-parleur" data-tout="${t}">${ICONES.son} Toute la table</button>
+          </div>
+          <div class="liste-table">${Array.from({ length: 10 }, (_, k) => `<button data-a="${t}" data-b="${k + 1}">${t} × ${k + 1} = <b>${t * (k + 1)}</b></button>`).join("")}</div>
+        </section>`).join("")}
+    </div>
+  `);
+  document.getElementById("retour").onclick = () => ecranMenu(p);
+  app.querySelectorAll(".liste-table button").forEach(b => b.onclick = () => {
+    app.querySelectorAll(".liste-table .lu").forEach(x => x.classList.remove("lu"));
+    b.classList.add("lu");
+    dire(aDire({ a: +b.dataset.a, b: +b.dataset.b }));
+  });
+  app.querySelectorAll("[data-tout]").forEach(b => b.onclick = () => {
+    const t = +b.dataset.tout;
+    dire(Array.from({ length: 10 }, (_, k) => aDire({ a: t, b: k + 1 })).join(". ") + ".");
+  });
+}
+
+/* =========================================================
+   Progrès
+   ========================================================= */
+function ecranProgres(p) {
+  const st = stats(p);
+  const etat = s => !s || !s.vu ? "c-vide" : estSu(s) ? "c-ok" : s.ko > s.ok ? "c-ko" : "c-moyen";
+  afficher(`
+    <div class="menu-tete">
+      <button class="bouton" id="retour">← Retour</button>
+      <div class="qui"><strong>Les progrès de ${esc(prenom(p))}</strong><span>Chaque case est un calcul de la table</span></div>
+    </div>
+    <section class="panneau">
+      <div class="tableau-wrap"><table class="grille">
+        <thead><tr><th></th>${Array.from({ length: 10 }, (_, k) => `<th>× ${k + 1}</th>`).join("")}</tr></thead>
+        <tbody>${TABLES.map(t => `<tr><th>${t}</th>${Array.from({ length: 10 }, (_, k) => {
+          const s = st[cleCalcul(t, k + 1)];
+          return `<td class="${etat(s)}"${s && s.vu ? ` title="réussi ${s.ok} fois, raté ${s.ko} fois"` : ""}>${t * (k + 1)}</td>`;
+        }).join("")}</tr>`).join("")}</tbody>
+      </table></div>
+      <div class="legende"><span class="l-ok">Bien su</span><span class="l-moyen">En cours</span><span class="l-ko">Souvent raté</span><span>Pas encore vu</span></div>
+      <p class="aide">Un calcul est « bien su » quand il a été réussi au moins deux fois, et deux fois plus souvent que raté. 7 × 8 et 8 × 7 comptent ensemble.</p>
+      <div><button class="bouton discret" id="raz">Remettre les scores à zéro</button></div>
+    </section>
+  `);
+  document.getElementById("retour").onclick = () => ecranMenu(p);
+  const raz = document.getElementById("raz");
+  raz.onclick = () => {
+    if (raz.dataset.confirme) { Stock.effacer("tables:stats:" + p); JEUX.forEach(j => Stock.effacer(`tables:record:${p}:${j.id}`)); ecranProgres(p); }
+    else { raz.dataset.confirme = "1"; raz.textContent = "Touche encore pour confirmer"; }
+  };
+}
+
+ecranAccueil();
+
+// Mode hors ligne : même copie sur l'appareil que le jeu de dictée
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then(r => r.update()).catch(() => {});
+}
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 // Mode hors ligne : on essaie toujours internet d'abord (pour avoir la dernière liste),
 // et si le réseau ne répond pas, on utilise la dernière copie gardée sur l'iPad.
-const CACHE = "cahier-dictee-v2";
-const FICHIERS = ["./", "index.html", "mots.js", "icone.png"];
+const CACHE = "cahier-dictee-v3";
+const FICHIERS = ["./", "index.html", "tables.html", "mots.js", "icone.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FICHIERS)).then(() => self.skipWaiting()));
