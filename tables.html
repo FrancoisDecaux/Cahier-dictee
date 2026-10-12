@@ -482,37 +482,40 @@ function noterResultat(p, c, reussi) {
   Stock.ecrire("tables:stats:" + p, s);
 }
 const estSu = s => !!s && s.ok >= 2 && s.ok >= 2 * s.ko;
+// On travaille × 2 à × 9 : × 1 et × 10 n'apprennent rien et brouillent la table révisée
+const MULTIPLICATEURS = [2, 3, 4, 5, 6, 7, 8, 9];
 function maitrise(p, t, st = stats(p)) {
-  let n = 0;
-  for (let b = 1; b <= 10; b++) if (estSu(st[cleCalcul(t, b)])) n++;
-  return n / 10;
+  return MULTIPLICATEURS.filter(b => estSu(st[cleCalcul(t, b)])).length / MULTIPLICATEURS.length;
 }
 
 function tirerSerie(p, tables, n = 10) {
   const st = stats(p);
   const vus = new Set(), pool = [];
   tables.forEach(t => {
-    for (let b = 1; b <= 10; b++) {
+    MULTIPLICATEURS.forEach(b => {
       const cle = cleCalcul(t, b);
-      if (vus.has(cle)) continue;
+      if (vus.has(cle)) return;
       vus.add(cle);
       const s = st[cle] || { ok: 0, ko: 0, vu: 0 };
       let poids = 1 + 2 * Math.max(0, s.ko - s.ok * 0.5);
       if (!s.vu) poids += 2;
-      if (b === 1 || b === 10) poids *= 0.3; // × 1 et × 10 : trop faciles, on les voit moins
       pool.push({ t, b, cle, poids });
-    }
+    });
   });
-  const serie = [];
-  while (serie.length < n && pool.length) {
-    const total = pool.reduce((a, x) => a + x.poids, 0);
-    let r = Math.random() * total, i = 0;
-    for (; i < pool.length - 1; i++) { r -= pool[i].poids; if (r <= 0) break; }
-    serie.push(pool.splice(i, 1)[0]);
-  }
-  // le plus souvent dans l'ordre de la table (7 × 8), parfois à l'envers (8 × 7)
-  const envers = niveau(p) === 1 ? 0.2 : 0.35;
-  return serie.map(x => Math.random() < envers ? { a: x.b, b: x.t, cle: x.cle } : { a: x.t, b: x.b, cle: x.cle });
+  const tirer = (reste, eviter) => {
+    const ok = reste.filter(x => x !== eviter);
+    const dans = ok.length ? ok : reste;
+    let r = Math.random() * dans.reduce((a, x) => a + x.poids, 0), i = 0;
+    for (; i < dans.length - 1; i++) { r -= dans[i].poids; if (r <= 0) break; }
+    return dans[i];
+  };
+  const serie = [], reste = pool.slice();
+  while (serie.length < n && reste.length) { const x = tirer(reste); reste.splice(reste.indexOf(x), 1); serie.push(x); }
+  // une seule table = 8 calculs : on complète avec les moins sus, jamais deux fois de suite le même
+  while (serie.length < n && pool.length) serie.push(tirer(pool, serie[serie.length - 1]));
+  // toujours dans l'ordre de la table révisée (8 × 3) ; à l'envers seulement si
+  // l'autre nombre est aussi une table choisie (8 × 3 ou 3 × 8 quand on révise 3 et 8)
+  return serie.map(x => tables.includes(x.b) && Math.random() < 0.5 ? { a: x.b, b: x.t, cle: x.cle } : { a: x.t, b: x.b, cle: x.cle });
 }
 
 /* =========================================================
@@ -955,7 +958,7 @@ MOTEURS.chrono = MOTEURS.calcul;
 /* ---------- 3. Le nombre caché ---------- */
 MOTEURS.cache = (c, zone) => {
   consigne("Quel nombre manque ?");
-  const trou = Math.random() < 0.5 ? 0 : 1;
+  const trou = 1; // la table reste visible : 8 × ? = 56
   zone.innerHTML = `<div class="reglure">${equation(c, trou, "?", "vide")}</div>`;
   pave(zone, v => repondre(c, trou, v));
 };
@@ -1005,10 +1008,10 @@ function ecranProgres(p) {
     </div>
     <section class="panneau">
       <div class="tableau-wrap"><table class="grille">
-        <thead><tr><th></th>${Array.from({ length: 10 }, (_, k) => `<th>× ${k + 1}</th>`).join("")}</tr></thead>
-        <tbody>${TABLES.map(t => `<tr><th>${t}</th>${Array.from({ length: 10 }, (_, k) => {
-          const s = st[cleCalcul(t, k + 1)];
-          return `<td class="${etat(s)}"${s && s.vu ? ` title="réussi ${s.ok} fois, raté ${s.ko} fois"` : ""}>${t * (k + 1)}</td>`;
+        <thead><tr><th></th>${MULTIPLICATEURS.map(b => `<th>× ${b}</th>`).join("")}</tr></thead>
+        <tbody>${TABLES.map(t => `<tr><th>${t}</th>${MULTIPLICATEURS.map(b => {
+          const s = st[cleCalcul(t, b)];
+          return `<td class="${etat(s)}"${s && s.vu ? ` title="réussi ${s.ok} fois, raté ${s.ko} fois"` : ""}>${t * b}</td>`;
         }).join("")}</tr>`).join("")}</tbody>
       </table></div>
       <div class="legende"><span class="l-ok">Bien su</span><span class="l-moyen">En cours</span><span class="l-ko">Souvent raté</span><span>Pas encore vu</span></div>
