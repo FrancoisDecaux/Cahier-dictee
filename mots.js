@@ -20,14 +20,50 @@ const LISTES = {
     prenom: "",
     classe: "CM1",
     niveau: 2,
-    titre: "Révisions : Nîmes, Reims, Lascaux, Quatre Saisons",
+    titre: "Révisions de toutes les listes",
     mots: [
-      // ===== L'amphithéâtre de Nîmes (liste incomplète : noms et verbes) =====
+      // ===== La tour Eiffel =====
+      // noms
+      { mot: "la construction", pieges: ["constrution", "construcsion", "contruction"], phrase: "La {} de la tour a duré deux ans." },
+      { mot: "la tour", pieges: ["tours", "toure", "tourr"], phrase: "La {} Eiffel se trouve à Paris." },
+      { mot: "un an", pieges: ["en", "ant", "anne"], phrase: "Il y a un {}, nous avons visité Paris." },
+      { mot: "le fer", pieges: ["faire", "fert", "ferre"], phrase: "La tour Eiffel est en {}." },
+      { mot: "la tonne", pieges: ["tone", "thonne", "tonnes"], phrase: "Un éléphant pèse plus d'une {}." },
+      { mot: "la peinture", pieges: ["pinture", "peintur", "painture"], phrase: "Tous les sept ans, on refait la {} de la tour." },
+      { mot: "la dizaine", pieges: ["disaine", "dizène", "dizainne"], phrase: "Une {}, c'est dix." },
+      { mot: "la centaine", pieges: ["sentaine", "centène", "cenntaine"], phrase: "Une {}, c'est cent." },
+      { mot: "le millier", pieges: ["milier", "millié", "milliers"], phrase: "Un {}, c'est mille." },
+      { mot: "le début", pieges: ["débu", "débus", "dèbut"], phrase: "Au {} de la visite, nous prenons l'ascenseur." },
+      { mot: "l'ampoule", pieges: ["empoule", "anpoule", "ampoul"], phrase: "Le soir, chaque {} s'allume." },
+      { mot: "le sommet", pieges: ["somet", "sommè", "sommait"], phrase: "Du {} de la tour, on voit tout Paris." },
+      { mot: "le ciel", pieges: ["siel", "ciell", "cièl"], phrase: "La tour monte vers le {}." },
+      { mot: "l'heure", pieges: ["heur", "eure", "heurre"], phrase: "À quelle {} ouvre la tour ?" },
+      { mot: "la nuit", pieges: ["nui", "nuie", "nuis"], phrase: "La {}, la tour scintille." },
+      { mot: "le mètre", pieges: ["métre", "mettre", "maître"], phrase: "Chaque marche mesure moins d'un {}." },
+      { mot: "le monument", pieges: ["monumant", "monumment", "monumen"], phrase: "La tour Eiffel est un {} très visité." },
+      { mot: "le pays", pieges: ["pay", "paye", "pai"], phrase: "La France est un beau {}." },
+      { mot: "le million", pieges: ["milion", "millon", "millions"], phrase: "Un {}, c'est mille fois mille." },
+      // verbes
+      { mot: "se terminer", pieges: ["se terminé", "ce terminer", "se terminner"], phrase: "La visite va {} au sommet." },
+      { mot: "nécessiter", pieges: ["nésessiter", "nécéssiter", "nécesiter"], phrase: "Ce chantier va {} beaucoup d'ouvriers." },
+      { mot: "rayonner", pieges: ["rayoner", "rayonné", "raionner"], phrase: "Le phare fait {} sa lumière sur Paris." },
+      { mot: "briller", pieges: ["brillé", "briler", "brillez"], phrase: "Le soir, la tour va {}." },
+      // adjectifs
+      { mot: "célèbre", pieges: ["célébre", "cèlèbre", "célèbbre"], phrase: "La tour Eiffel est très {}." },
+      // mots invariables
+      { mot: "plusieurs", pieges: ["plusieur", "plusieures", "plusieurt"], phrase: "Il y a {} ascenseurs dans la tour." },
+      { mot: "au-dessus", pieges: ["au dessus", "au-dessu", "o-dessus"], phrase: "Les nuages passent {} de la tour." },
+      { mot: "ainsi", pieges: ["insi", "ainssi", "einsi"], phrase: "C'est {} que la tour a été construite." },
+      { mot: "même", pieges: ["meme", "mème", "mêmes"], phrase: "Elle est {} montée jusqu'au sommet." },
+      { mot: "plus", pieges: ["plu", "pluss", "plut"], phrase: "La tour est {} haute que l'église." },
+      { mot: "avec", pieges: ["avèc", "avek", "aveque"], phrase: "Je monte dans la tour {} mon père." },
+      { mot: "chaque", pieges: ["chac", "chake", "chaques"], phrase: "Il y a une lampe à {} étage." },
+      { mot: "dans", pieges: ["dant", "dens", "dan"], phrase: "Nous montons {} l'ascenseur." },
+      // ===== L'amphithéâtre de Nîmes =====
       // noms
       { mot: "le siècle", pieges: ["sciècle", "siécle", "sièkle"], phrase: "Les arènes ont été construites au premier {}." },
       { mot: "une époque", pieges: ["époc", "épok", "èpoque"], phrase: "À cette {}, les Romains vivaient en Gaule." },
       { mot: "la Gaule", pieges: ["gaule", "Gôle", "Gaulle"], phrase: "Autrefois, la France s'appelait la {}." },
-      { mot: "le mètre", pieges: ["métre", "mettre", "maître"], phrase: "Le mur mesure plus d'un {} d'épaisseur." },
       { mot: "l'étage", pieges: ["étaje", "ètage", "étages"], phrase: "Les spectateurs montent à l'{} du haut." },
       { mot: "la hauteur", pieges: ["auteur", "hauteure", "hotteur"], phrase: "La {} des arènes est de vingt et un mètres." },
       { mot: "le spectateur", pieges: ["spéctateur", "spectateure", "spectatteur"], phrase: "Le {} applaudit le gladiateur." },
@@ -48,6 +84,18 @@ const LISTES = {
       { mot: "assister", pieges: ["asister", "assisté", "asisster"], phrase: "Nous allons {} à un spectacle." },
       { mot: "accéder", pieges: ["acéder", "accèder", "accédé"], phrase: "On peut {} aux gradins par un escalier." },
       { mot: "s'installer", pieges: ["s'instaler", "s'installé", "c'installer"], phrase: "Les spectateurs vont {} sur les gradins." },
+      // adjectifs et participes passés
+      { mot: "premier", pieges: ["premié", "premmier", "prumier"], phrase: "Les arènes datent du {} siècle." },
+      { mot: "construit", pieges: ["construi", "constuit", "construits"], phrase: "L'amphithéâtre a été {} par les Gallo-Romains." },
+      { mot: "romain", pieges: ["romin", "romein", "rommain"], phrase: "Les arènes sont un monument {}." },
+      { mot: "violent", pieges: ["violant", "viollent", "violen"], phrase: "Le combat des gladiateurs est {}." },
+      { mot: "plein", pieges: ["plin", "plain", "pleins"], phrase: "Le jour du spectacle, l'amphithéâtre est {}." },
+      // mots invariables
+      { mot: "jusqu'à", pieges: ["jusqu'a", "jusca", "jusqu'as"], phrase: "Nous montons {} la dernière marche." },
+      { mot: "grâce", pieges: ["grace", "grasse", "grâsse"], phrase: "Nous voyons tout {} aux gradins du haut." },
+      { mot: "en bas", pieges: ["en ba", "an bas", "en bat"], phrase: "Les riches s'assoient {}, près de l'arène." },
+      { mot: "en haut", pieges: ["en hau", "en eau", "an haut"], phrase: "Les pauvres s'assoient tout {}." },
+      { mot: "peut-être", pieges: ["peut être", "peu-être", "peut-ètre"], phrase: "Nous irons {} à Nîmes cet été." },
       // ===== La cathédrale de Reims =====
       // noms
       { mot: "la cathédrale", pieges: ["catédrale", "cathédralle", "cathèdrale"], phrase: "Nous visitons la {} de Reims." },
@@ -55,7 +103,6 @@ const LISTES = {
       { mot: "la France", pieges: ["france", "Frence", "Franse"], phrase: "Reims est une ville de {}." },
       { mot: "la démonstration", pieges: ["démonstrasion", "démontration", "dèmonstration"], phrase: "La maîtresse fait une {} au tableau." },
       { mot: "un édifice", pieges: ["édifisse", "édiffice", "édifise"], phrase: "La cathédrale est un {} très ancien." },
-      { mot: "le ciel", pieges: ["siel", "ciell", "cièl"], phrase: "Les tours montent vers le {}." },
       { mot: "la lumière", pieges: ["lumiaire", "lumièr", "lumiére"], phrase: "La {} traverse les vitraux." },
       { mot: "l'art", pieges: ["ar", "hart", "arr"], phrase: "La cathédrale est une œuvre d'{}." },
       { mot: "la Révolution", pieges: ["révolution", "Révolusion", "Rèvolution"], phrase: "La {} française a commencé en 1789." },
@@ -85,20 +132,16 @@ const LISTES = {
       { mot: "comme", pieges: ["come", "comm", "comes"], phrase: "La tour est haute {} une montagne." },
       { mot: "vers", pieges: ["ver", "vert", "verre"], phrase: "Nous marchons {} la cathédrale." },
       { mot: "toujours", pieges: ["toujour", "toujourt", "toujoure"], phrase: "La cathédrale est {} debout." },
-      { mot: "plus", pieges: ["plu", "pluss", "plut"], phrase: "Elle est {} haute que la maison." },
       { mot: "pendant", pieges: ["pandant", "pendent", "pendan"], phrase: "Il a plu {} la visite." },
       { mot: "lors", pieges: ["lor", "lord", "lorre"], phrase: "Nous avons pris des photos {} de la visite." },
       { mot: "mais", pieges: ["mai", "mes", "maix"], phrase: "Il pleut, {} nous sortons quand même." },
       { mot: "ensuite", pieges: ["ansuite", "ensuitte", "ensuit"], phrase: "Nous visitons la nef, {} nous montons dans la tour." },
       { mot: "aujourd'hui", pieges: ["aujourdhui", "aujourd'ui", "aujour'dhui"], phrase: "Nous allons à Reims {}." },
-      { mot: "chaque", pieges: ["chac", "chake", "chaques"], phrase: "Il y a une statue à {} porte." },
       { mot: "afin", pieges: ["affin", "afain", "afint"], phrase: "Il se lève tôt {} de visiter la ville." },
       { mot: "chacun", pieges: ["chaqun", "chacum", "chacqun"], phrase: "Les élèves ont {} un cahier." },
       { mot: "entièrement", pieges: ["entièremant", "entiérement", "entièrment"], phrase: "La cathédrale a été {} restaurée." },
       // ===== La grotte de Lascaux =====
       // noms
-      { mot: "un an", pieges: ["en", "ant", "anne"], phrase: "Mon frère a un {} de plus que moi." },
-      { mot: "la peinture", pieges: ["pinture", "peintur", "painture"], phrase: "La {} représente un cheval." },
       { mot: "l'artiste", pieges: ["artist", "hartiste", "artisste"], phrase: "L'{} peint sur le mur de la grotte." },
       { mot: "la grotte", pieges: ["grote", "grautte", "grotes"], phrase: "Nous entrons dans la {} avec une lampe." },
       { mot: "un animal", pieges: ["animale", "animmal", "annimal"], phrase: "Le cheval est un {}." },
@@ -165,7 +208,6 @@ const LISTES = {
       // adjectifs et participes passés
       { mot: "classique", pieges: ["classik", "clasique", "classic"], phrase: "Vivaldi a écrit de la musique {}." },
       { mot: "différent", pieges: ["diférent", "différant", "diférant"], phrase: "Chaque saison a un air {}." },
-      { mot: "premier", pieges: ["premié", "premmier", "prumier"], phrase: "Le {} concerto parle du printemps." },
       { mot: "première", pieges: ["premiére", "premièr", "premmière"], phrase: "La {} saison est le printemps." },
       { mot: "deuxième", pieges: ["deuxiéme", "deuzième", "deusième"], phrase: "L'été est la {} saison." },
       { mot: "chanteur", pieges: ["chanteure", "chenteur", "chantteur"], phrase: "L'oiseau {} se pose sur la branche." },
@@ -182,9 +224,7 @@ const LISTES = {
       { mot: "d'abord", pieges: ["dabord", "d'abore", "d'habord"], phrase: "Nous écoutons {} le printemps." },
       { mot: "ensemble", pieges: ["ansemble", "ensamble", "enssemble"], phrase: "Les musiciens jouent {}." },
       { mot: "enfin", pieges: ["enfain", "anfin", "enfint"], phrase: "Après l'automne vient {} l'hiver." },
-      { mot: "avec", pieges: ["avèc", "avek", "aveque"], phrase: "Je joue {} mon frère." },
-      { mot: "sous", pieges: ["sou", "soue", "souts"], phrase: "Le chien dort {} l'arbre." },
-      { mot: "dans", pieges: ["dant", "dens", "dan"], phrase: "Les oiseaux chantent {} la forêt." }
+      { mot: "sous", pieges: ["sou", "soue", "souts"], phrase: "Le chien dort {} l'arbre." }
     ]
   },
 
