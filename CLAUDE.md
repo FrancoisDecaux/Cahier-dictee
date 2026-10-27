@@ -5,6 +5,9 @@ https://francoisdecaux.github.io/Cahier-dictee/
 
 Tout le jeu de dictée est dans `index.html`. Les listes de mots sont dans `mots.js`.
 Le jeu des tables de multiplication est dans `tables.html` (lien depuis l'accueil).
+Le jeu de conjugaison est dans `conjugaison.html`, les verbes dans `conjugaison.js`
+(formes je → ils, deux formes justes séparées par `|`, deux pièges par personne).
+Si le titre des verbes change, mettre à jour le sous-titre du lien dans `index.html`.
 
 ## Mise à jour hebdomadaire de la liste (la demande la plus fréquente)
 

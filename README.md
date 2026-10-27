@@ -36,3 +36,7 @@ Depuis l'accueil, le bouton « Tables de multiplication » ouvre `tables.html`. 
 5. **Le grand mélange** : un peu de chaque.
 
 Après une erreur, la correction donne une astuce (fois 9 = fois 10 moins une fois…). « Revoir les tables » permet de lire et d'écouter les tables, « Mes progrès » montre les calculs sus et ratés.
+
+## Conjugaison
+
+Le bouton « Conjugaison » de l'accueil ouvre `conjugaison.html`. Les verbes sont dans **`conjugaison.js`**. Deux jeux : choisir le verbe bien écrit parmi trois, ou l'écrire au clavier. Après une erreur, le verbe est affiché en entier avec la bonne personne surlignée.
