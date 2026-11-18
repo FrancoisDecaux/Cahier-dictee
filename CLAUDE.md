@@ -34,7 +34,6 @@ Répondre au parent en français, en le tutoyant.
 
 ## Dossier `csmarathon/` (sans rapport avec le cahier)
 
-Démo jouable du livre « Customer Success Marathon », hébergée ici par commodité :
-https://francoisdecaux.github.io/Cahier-dictee/csmarathon/
-Un seul fichier `csmarathon/index.html`, autonome. Ne pas y toucher lors des mises à jour
-de listes, ne pas l'ajouter à `sw.js`, et ne pas créer de lien entre les deux sites.
+Simple redirection vers la démo du livre « Customer Success Marathon », qui vit dans son
+propre dépôt (`FrancoisDecaux/csmarathon`, https://francoisdecaux.github.io/csmarathon/).
+Ne pas y toucher lors des mises à jour de listes et ne pas l'ajouter à `sw.js`.
