@@ -214,9 +214,10 @@ function go(to){
   if(DATA[to]){ enter(to); return; }
   S.screen = "demoEnd"; S.lockedTo = to; bump = null; save(); render(); window.scrollTo(0,0);
 }
-function newGame(){
+// Rejouer ramène à la couverture ; seul « Refaire ma fiche » va droit à la fiche de personnage.
+function newGame(screen){
   const keep = S.trophies, draft = S.skills ? Object.assign({}, S.skills) : S.draft;
-  S = fresh(); S.trophies = keep; S.draft = draft; S.screen = "setup";
+  S = fresh(); S.trophies = keep; S.draft = draft; S.screen = screen || "home";
   save(); render(); window.scrollTo(0,0);
 }
 // Chaque chiffre de 0 à 9 a exactement une chance sur dix : on tire d'abord le chiffre,
@@ -401,7 +402,7 @@ function openTools(){
     <h3 class="sec">Régler l’énergie</h3>
     <div class="adj"><button data-act="e-" aria-label="Baisser l’énergie">−</button><span class="chip" id="adj-e">${signed(S.energy)}</span><button data-act="e+" aria-label="Monter l’énergie">+</button><span style="font-weight:400;font-size:15px">pour voir un test de fatigue basculer</span></div>
     <h3 class="sec">Compétences</h3>
-    <button class="btn wide quiet" data-act="restart">Refaire ma fiche de personnage</button>`);
+    <button class="btn wide quiet" data-act="resheet">Refaire ma fiche de personnage</button>`);
 }
 
 /* ---------- Événements ---------- */
@@ -426,7 +427,8 @@ document.addEventListener("click", (ev) => {
   else if(act === "sheet"){ openSheet(); }
   else if(act === "rules"){ openRules(); }
   else if(act === "tools"){ openTools(); }
-  else if(act === "restart"){ closeModal(); newGame(); }
+  else if(act === "restart"){ closeModal(); newGame("home"); }
+  else if(act === "resheet"){ closeModal(); newGame("setup"); }
   else if(act === "jump"){ closeModal(); if(!S.skills) S.skills = Object.assign({}, TEST_SKILLS); enter(Number(el.dataset.to)); }
   else if(act === "e-" || act === "e+"){
     S.energy = Math.max(-10, Math.min(10, S.energy + (act === "e+" ? 1 : -1))); save();
